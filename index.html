@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Aula 2 - 10 Frases Curtas | Fale&Go</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Nunito', sans-serif;
+      user-select: none;
+    }
+
+    body {
+      background-color: #0b2545;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 40px;
+    }
+
+    .header {
+      background: #081c33;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: #ffb703;
+      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .container {
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .mascot-section {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .capybara-avatar {
+      width: 70px;
+      height: 70px;
+      background: #ffb703;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+      border: 3px solid #ffffff;
+    }
+
+    .speech-bubble {
+      background: #ffffff;
+      color: #0b2545;
+      padding: 14px 18px;
+      border-radius: 18px;
+      border-top-left-radius: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.4;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      min-height: 70px;
+      position: relative;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 14px;
+      background-color: #0b2545;
+      margin-left: 2px;
+      animation: blink 0.7s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .video-card {
+      background: #134074;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      margin-bottom: 25px;
+      border: 2px solid #1d5393;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+    }
+
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-info {
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #8da9c4;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #ffb703;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exercise-card {
+      background: #ffffff;
+      color: #0b2545;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    .question-text {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .opt-btn {
+      background: #eef4f8;
+      border: 2px solid #d0e1f9;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 14px;
+      color: #0b2545;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .opt-btn.correct {
+      background: #2ec4b6 !important;
+      border-color: #2ec4b6 !important;
+      color: #ffffff !important;
+    }
+
+    .opt-btn.wrong {
+      background: #e63946 !important;
+      border-color: #e63946 !important;
+      color: #ffffff !important;
+    }
+
+    .voice-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      background: #eef4f8;
+      border-radius: 16px;
+    }
+
+    .mic-btn {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #ffb703;
+      border: none;
+      color: #0b2545;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mic-btn.listening {
+      animation: pulse 1s infinite;
+      background: #e63946;
+      color: #fff;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+    }
+
+    #victory-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(11, 37, 69, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.5s ease;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #victory-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .victory-box {
+      background: #ffffff;
+      color: #0b2545;
+      border-radius: 24px;
+      padding: 30px 20px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .btn-continue {
+      background: #ffb703;
+      color: #0b2545;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+    <div class="header-title">Aula 2: 10 Frases Práticas</div>
+  </div>
+
+  <div class="container">
+
+    <!-- MASCOTE CAPIVARA + DIGITAÇÃO -->
+    <div class="mascot-section">
+      <div class="capybara-avatar">🦫</div>
+      <div class="speech-bubble">
+        <span id="typed-text"></span><span class="cursor"></span>
+      </div>
+    </div>
+
+    <!-- VÍDEO DO YOUTUBE -->
+    <div class="video-card">
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/nd_xTQN81Xg?enablejsapi=1" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        ⏱️ Canal: Vamos a Hablar Español | 10 Frases Curtas
+      </div>
+    </div>
+
+    <!-- PARTE 1: VOCABULÁRIO (MÚLTIPLA ESCOLHA) -->
+    <div class="section-title">📝 Parte 1: Significado das Expressões</div>
+
+    <!-- Exercício 1: Me toca -->
+    <div class="exercise-card" id="q1">
+      <div class="question-text">1. O que significa a frase: "Hoy me toca lavar los platos"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q1')">Hoje é minha vez de lavar a louça</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q1')">Hoje eu me toquei de lavar a louça</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q1')">Hoje toquei a música da louça</button>
+      </div>
+    </div>
+
+    <!-- Exercício 2: Suelo / Sueles -->
+    <div class="exercise-card" id="q2">
+      <div class="question-text">2. O que significa: "Suelo cocinar los fines de semana"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Cozinho no chão nos finais de semana</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q2')">Eu costumo cozinhar nos finais de semana</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Quero cozinhar nos finais de semana</button>
+      </div>
+    </div>
+
+    <!-- Exercício 3: Cargar -->
+    <div class="exercise-card" id="q3">
+      <div class="question-text">3. Na frase "Fui a cargar la tarjeta del autobús", o que significa "cargar"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q3')">Recarregar (colocar saldo)</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Carregar nas costas</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Guardar na bolsa</button>
+      </div>
+    </div>
+
+    <!-- Exercício 4: Ni idea -->
+    <div class="exercise-card" id="q4">
+      <div class="question-text">4. Quando alguém responde "Ni idea", o que a pessoa quer dizer?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Tenho uma ideia excelente</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q4')">Não faço a menor ideia / Não sei</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Não idealize as coisas</button>
+      </div>
+    </div>
+
+    <!-- Exercício 5: Se me fue -->
+    <div class="exercise-card" id="q5">
+      <div class="question-text">5. O que significa quando você diz: "Estaba por decirlo, pero se me fue"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q5')">Ia falar, mas esqueci / me fugiu a memória</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Ia falar, mas ele foi embora</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Ia falar, mas fui embora primeiro</button>
+      </div>
+    </div>
+
+
+    <!-- PARTE 2: FALA - FRASES CURTAS -->
+    <div class="section-title">🎙️ Parte 2: Treine as Frases no Microfone</div>
+
+    <!-- Frase 1 -->
+    <div class="exercise-card" id="q6">
+      <div class="question-text">6. Diga a frase: "Estoy estudiando español"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic6-btn" onclick="startVoiceRecognition('estoy estudiando español', 'mic6-btn', 'status6', 'q6')">🎙️</button>
+        <div id="status6" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Frase 2 -->
+    <div class="exercise-card" id="q7">
+      <div class="question-text">7. Diga a frase: "Puede repetir por favor"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic7-btn" onclick="startVoiceRecognition('puede repetir por favor', 'mic7-btn', 'status7', 'q7')">🎙️</button>
+        <div id="status7" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Frase 3 -->
+    <div class="exercise-card" id="q8">
+      <div class="question-text">8. Diga a frase: "Cómo se dice"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic8-btn" onclick="startVoiceRecognition('cómo se dice', 'mic8-btn', 'status8', 'q8')">🎙️</button>
+        <div id="status8" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Frase 4 -->
+    <div class="exercise-card" id="q9">
+      <div class="question-text">9. Diga a frase: "Voy a estar pendiente"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic9-btn" onclick="startVoiceRecognition('voy a estar pendiente', 'mic9-btn', 'status9', 'q9')">🎙️</button>
+        <div id="status9" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Frase 5 -->
+    <div class="exercise-card" id="q10">
+      <div class="question-text">10. Diga a frase: "Déjamelo a mí"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic10-btn" onclick="startVoiceRecognition('déjamelo a mí', 'mic10-btn', 'status10', 'q10')">🎙️</button>
+        <div id="status10" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+
+    <!-- PARTE 3: FALA - PALAVRAS DO VÍDEO -->
+    <div class="section-title">🗣️ Parte 3: Pronúncia de Palavras Isoladas</div>
+
+    <!-- Palavra 1 -->
+    <div class="exercise-card" id="q11">
+      <div class="question-text">11. Pronuncie a palavra: "ESPAÑOL"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic11-btn" onclick="startVoiceRecognition('español', 'mic11-btn', 'status11', 'q11')">🎙️</button>
+        <div id="status11" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Palavra 2 -->
+    <div class="exercise-card" id="q12">
+      <div class="question-text">12. Pronuncie a palavra: "PLATOS"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic12-btn" onclick="startVoiceRecognition('platos', 'mic12-btn', 'status12', 'q12')">🎙️</button>
+        <div id="status12" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Palavra 3 -->
+    <div class="exercise-card" id="q13">
+      <div class="question-text">13. Pronuncie a palavra: "TARJETA"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic13-btn" onclick="startVoiceRecognition('tarjeta', 'mic13-btn', 'status13', 'q13')">🎙️</button>
+        <div id="status13" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Palavra 4 -->
+    <div class="exercise-card" id="q14">
+      <div class="question-text">14. Pronuncie a palavra: "TELÉFONO"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic14-btn" onclick="startVoiceRecognition('teléfono', 'mic14-btn', 'status14', 'q14')">🎙️</button>
+        <div id="status14" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+    <!-- Palavra 5 -->
+    <div class="exercise-card" id="q15">
+      <div class="question-text">15. Pronuncie a palavra: "PENDIENTE"</div>
+      <div class="voice-box">
+        <button class="mic-btn" id="mic15-btn" onclick="startVoiceRecognition('pendiente', 'mic15-btn', 'status15', 'q15')">🎙️</button>
+        <div id="status15" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL DE VITÓRIA -->
+  <div id="victory-modal">
+    <div class="victory-box">
+      <div style="font-size: 60px;">🏆</div>
+      <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Sensacional!</div>
+      <p style="font-size: 14px; font-weight: 700; color: #6c757d; margin-top: 8px;">
+        Você concluiu os 15 exercícios da Aula 2 com maestria!
+      </p>
+      <div style="margin-top: 15px; background: #eef4f8; padding: 12px; border-radius: 12px; font-weight: 800; color: #ffb703;">
+        🌟 +150 XP Ganhos | Progresso Atualizado
+      </div>
+      <button class="btn-continue" onclick="window.location.href='index.html'">Voltar para a Trilha</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. DIGITAÇÃO PROGRESSIVA DA CAPIVARA
+    const textToType = "¡Hola viajero! Vamos a praticar as 10 frases curtas do vídeo para você destravar o seu espanhol nas viagens. Complete os desafios abaixo! ¡Vamos!";
+    let typeIndex = 0;
+
+    function typeWriter() {
+      if (typeIndex < textToType.length) {
+        document.getElementById("typed-text").innerHTML += textToType.charAt(typeIndex);
+        typeIndex++;
+        setTimeout(typeWriter, 30);
+      }
+    }
+    window.addEventListener('load', typeWriter);
+
+    // 2. CONTROLE DE RESPOSTAS
+    let answeredCorrectly = 0;
+    const totalQuestions = 15;
+
+    function checkAnswer(btn, isCorrect, qId) {
+      const card = document.getElementById(qId);
+      const buttons = card.querySelectorAll('.opt-btn');
+      buttons.forEach(b => b.disabled = true);
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        answeredCorrectly++;
+      } else {
+        btn.classList.add('wrong');
+      }
+      checkCompletion();
+    }
+
+    // 3. RECONHECIMENTO DE VOZ (MICROFONE)
+    function startVoiceRecognition(expectedText, btnId, statusId, qId) {
+      const micBtn = document.getElementById(btnId);
+      const statusText = document.getElementById(statusId);
+
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        statusText.innerHTML = "✅ Pronúncia aceita!";
+        statusText.style.color = "#2ec4b6";
+        micBtn.disabled = true;
+        answeredCorrectly++;
+        checkCompletion();
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-ES';
+
+      micBtn.classList.add('listening');
+      statusText.innerHTML = `Ouvindo... Diga "${expectedText}"`;
+
+      recognition.start();
+
+      recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        micBtn.classList.remove('listening');
+
+        // Normalização simples para aceitar pequenas variações
+        const normalizedTarget = expectedText.toLowerCase().replace(/[áéíóú]/g, (m) => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]));
+        const normalizedTranscript = transcript.replace(/[áéíóú]/g, (m) => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]));
+
+        if (normalizedTranscript.includes(normalizedTarget) || normalizedTranscript.includes(normalizedTarget.replace('ñ','n'))) {
+          statusText.innerHTML = `✅ Muito bem! ("${transcript}")`;
+          statusText.style.color = "#2ec4b6";
+          micBtn.disabled = true;
+          answeredCorrectly++;
+          checkCompletion();
+        } else {
+          statusText.innerHTML = `Ouvi "${transcript}". Tente de novo!`;
+          statusText.style.color = "#e63946";
+        }
+      };
+
+      recognition.onerror = function() {
+        micBtn.classList.remove('listening');
+        statusText.innerHTML = "Não ouvi bem. Clique para tentar.";
+      };
+    }
+
+    // 4. SALVAR PROGRESSO E DISPARAR VITÓRIA
+    function checkCompletion() {
+      if (answeredCorrectly >= totalQuestions) {
+        saveUserProgress(150);
+
+        setTimeout(() => {
+          playVictorySound();
+          document.getElementById('victory-modal').classList.add('show');
+        }, 500);
+      }
+    }
+
+    function saveUserProgress(xpEarned) {
+      let currentXP = parseInt(localStorage.getItem('faleandgo_xp') || '0');
+      let currentStreak = parseInt(localStorage.getItem('faleandgo_streak') || '1');
+
+      currentXP += xpEarned;
+
+      localStorage.setItem('faleandgo_xp', currentXP);
+      localStorage.setItem('faleandgo_streak', currentStreak);
+    }
+
+    // 5. SOM SINTETIZADO DE VITÓRIA (0 KB)
+    function playVictorySound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        
+        notes.forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.3, ctx.currentTime + index * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + index * 0.12 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + index * 0.12);
+          osc.stop(ctx.currentTime + index * 0.12 + 0.4);
+        });
+      } catch (e) {}
+    }
+  </script>
+</body>
+</html>
