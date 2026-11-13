@@ -132,7 +132,7 @@
       <span class="vocab-tag">Adiós</span>
     </div>
 
-    <!-- EXERCÍCIO 1: ÁUDIO SEM TEXTO (#1 Hola) -->
+   <!-- EXERCÍCIO 1: ÁUDIO SEM TEXTO (#1 Hola) -->
     <div class="exercise-card" id="q1">
       <div class="question-text">1. Clique para ouvir e escolha a tradução certa:</div>
       <div class="audio-prompt-row">
@@ -308,7 +308,7 @@
       </div>
     </div>
 
-    <!-- EXERCÍCIO 14: CARDS DE FALA AUTOMÁTICOS - PARTE 1 (#24 Adiós + revisão #1 Hola, #7 Gracias, #13 Mucho gusto) -->
+    <!-- EXERCÍCIO 14: CARDS DE FALA AUTOMÁTICOS - PARTE 1 -->
     <div class="exercise-card" id="q14">
       <div class="question-text">14. Cards de Fala Automáticos (1/2): Pronuncie as palavras que aparecerem na tela:</div>
       <div class="auto-speech-box" id="deck-box-q14">
@@ -316,7 +316,7 @@
       </div>
     </div>
 
-    <!-- EXERCÍCIO 15: CARDS DE FALA AUTOMÁTICOS - PARTE 2 (revisão #5 Bien, #9 Nombre, #17 Por favor, #23 Hasta pronto) -->
+    <!-- EXERCÍCIO 15: CARDS DE FALA AUTOMÁTICOS - PARTE 2 -->
     <div class="exercise-card" id="q15">
       <div class="question-text">15. Cards de Fala Automáticos (2/2): Complete o treino de pronúncia do diálogo:</div>
       <div class="auto-speech-box" id="deck-box-q15">
@@ -341,7 +341,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE CONFIRMAÇÃO DE SAÍDA (SALVAR PROGRESSO) -->
+  <!-- MODAL DE CONFIRMAÇÃO DE SAÍDA -->
   <div id="exit-modal" class="modal-overlay">
     <div class="modal-box">
       <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
@@ -355,7 +355,6 @@
   </div>
 
   <script>
-    // URL reserva da página de Aulas Básicas
     const URL_AULAS_BASICAS = 'https://weyload.github.io/Aulas-basicas/';
 
     function voltarParaAulasBasicas() {
@@ -420,7 +419,6 @@
     }
 
     function checkListeningAnswer(btn, isCorrect, qId, spanishWord, revealId) {
-      // Revela a palavra certa na frente do botão assim que escolher qualquer alternativa
       const revealEl = document.getElementById(revealId);
       if (revealEl) {
         revealEl.textContent = spanishWord.toUpperCase();
@@ -452,26 +450,22 @@
       }
       const state = matchState[qId];
 
-      // Se clicar no botão em espanhol, fala a pronúncia como apoio
       if (btn.dataset.side === 'es' && btn.dataset.word) {
         hablarPronunciacionCorrecta(btn.dataset.word);
       }
 
-      // Nenhum selecionado ainda
       if (!state.selected) {
         state.selected = btn;
         btn.classList.add('selected');
         return;
       }
 
-      // Clicou no mesmo botão -> desmarca
       if (state.selected === btn) {
         btn.classList.remove('selected');
         state.selected = null;
         return;
       }
 
-      // Clicou em outro botão do mesmo lado -> troca seleção
       if (state.selected.dataset.side === btn.dataset.side) {
         state.selected.classList.remove('selected');
         state.selected = btn;
@@ -479,7 +473,6 @@
         return;
       }
 
-      // Clicou no lado oposto -> verifica par
       const firstBtn = state.selected;
       state.selected = null;
 
@@ -505,10 +498,34 @@
       }
     }
 
-    // 6. CARDS DE FALA DE TROCA AUTOMÁTICA
+    // 6. CARDS DE FALA DE TROCA AUTOMÁTICA (CORRIGIDO SEM DUPLICAÇÃO E SEM ECO)
     let activeDeck = null;
+    let currentRecognition = null;
+    let deckTimer = null;
+    let listenSessionCounter = 0;
+
+    function cleanupSpeechEngines() {
+      if (deckTimer) {
+        clearTimeout(deckTimer);
+        deckTimer = null;
+      }
+      if (currentRecognition) {
+        try {
+          currentRecognition.onresult = null;
+          currentRecognition.onerror = null;
+          currentRecognition.onend = null;
+          currentRecognition.abort();
+        } catch (e) {}
+        currentRecognition = null;
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
 
     function startSpeechDeck(qId, wordList) {
+      cleanupSpeechEngines();
+
       activeDeck = {
         qId: qId,
         queue: wordList.map(w => ({ word: w, isRetry: false })),
@@ -516,11 +533,12 @@
         attemptsOnCurrent: 0,
         hits: 0,
         misses: 0,
-        totalInitial: wordList.length,
-        listening: false
+        awaitingSpeech: false,
+        sessionId: 0
       };
+
       renderSpeechCard();
-      triggerDeckListen();
+      deckTimer = setTimeout(() => triggerDeckListen(), 600);
     }
 
     function renderSpeechCard() {
@@ -533,15 +551,37 @@
       box.innerHTML = `
         <div class="speech-card-counter">Card ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
         <div class="speech-target-big">${currentItem.word.toUpperCase()}</div>
-        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="triggerDeckListen()">🎙️</button>
-        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Preparando microfone...</div>
+        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="manualTriggerDeckListen()">🎙️</button>
+        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Prepare-se...</div>
       `;
+    }
+
+    function manualTriggerDeckListen() {
+      if (!activeDeck || activeDeck.awaitingSpeech) return;
+      cleanupSpeechEngines();
+      triggerDeckListen();
     }
 
     function triggerDeckListen() {
       if (!activeDeck) return;
       const currentItem = activeDeck.queue[activeDeck.index];
       if (!currentItem) return;
+
+      // Encerra qualquer instância anterior antes de abrir uma nova sessão
+      if (currentRecognition) {
+        try {
+          currentRecognition.onresult = null;
+          currentRecognition.onerror = null;
+          currentRecognition.onend = null;
+          currentRecognition.abort();
+        } catch (e) {}
+        currentRecognition = null;
+      }
+
+      listenSessionCounter++;
+      const thisSession = listenSessionCounter;
+      activeDeck.sessionId = thisSession;
+      activeDeck.awaitingSpeech = true;
 
       const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
       const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
@@ -551,43 +591,67 @@
         statusEl.style.color = '#0b2545';
       }
 
+      // Modo Kodular App Inventor
       if (window.AppInventor) {
         window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
         return;
       }
 
+      // Fallback caso o navegador não tenha API de voz
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        setTimeout(() => processDeckSpeechResult(currentItem.word), 900);
+        deckTimer = setTimeout(() => {
+          if (activeDeck && activeDeck.awaitingSpeech && activeDeck.sessionId === thisSession) {
+            processDeckSpeechResult(currentItem.word, thisSession);
+          }
+        }, 1000);
         return;
       }
 
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
+      currentRecognition = recognition;
       recognition.lang = 'es-ES';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 3;
 
       recognition.onresult = function(event) {
+        if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
         if (micBtn) micBtn.classList.remove('listening');
-        processDeckSpeechResult(event.results[0][0].transcript);
+
+        let combinedTranscript = "";
+        for (let i = 0; i < event.results[0].length; i++) {
+          combinedTranscript += " " + event.results[0][i].transcript;
+        }
+        processDeckSpeechResult(combinedTranscript.trim(), thisSession);
       };
 
       recognition.onerror = function() {
+        if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
         if (micBtn) micBtn.classList.remove('listening');
-        processDeckSpeechResult("");
+        processDeckSpeechResult("", thisSession);
+      };
+
+      recognition.onend = function() {
+        // Se encerrou sem disparar onresult nem onerror, trata como silêncio uma única vez
+        if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
+        if (micBtn) micBtn.classList.remove('listening');
+        processDeckSpeechResult("", thisSession);
       };
 
       try {
         recognition.start();
       } catch (e) {
         if (micBtn) micBtn.classList.remove('listening');
+        activeDeck.awaitingSpeech = false;
       }
     }
 
     function receberTextoVoz(textoOuvido) {
-      if (activeDeck) {
-        const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
-        if (micBtn) micBtn.classList.remove('listening');
-        processDeckSpeechResult(textoOuvido);
-      }
+      if (!activeDeck || !activeDeck.awaitingSpeech) return;
+      const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
+      if (micBtn) micBtn.classList.remove('listening');
+      processDeckSpeechResult(textoOuvido, activeDeck.sessionId);
     }
 
     function normalizeSpanish(str) {
@@ -596,11 +660,16 @@
         .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]))
         .replace(/ñ/g, 'n')
         .replace(/\bola\b/g, 'hola')
+        .replace(/\basta\b/g, 'hasta')
         .replace(/\bgrasias\b/g, 'gracias');
     }
 
-    function processDeckSpeechResult(transcript) {
-      if (!activeDeck) return;
+    function processDeckSpeechResult(transcript, sessionId) {
+      if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== sessionId) return;
+
+      // Trava imediatamente esta sessão para evitar disparos duplicados
+      activeDeck.awaitingSpeech = false;
+
       const deck = activeDeck;
       const currentItem = deck.queue[deck.index];
       const box = document.getElementById(`deck-box-${deck.qId}`);
@@ -608,52 +677,59 @@
 
       const normTarget = normalizeSpanish(currentItem.word);
       const normHeard = normalizeSpanish(transcript);
+      const firstHeardWord = transcript.trim().split(/\s+/)[0] || "";
 
-      const isMatch = transcript !== "" && (normHeard.includes(normTarget) || normTarget.includes(normHeard) && normHeard.length >= 3);
+      const isMatch = transcript !== "" && (
+        normHeard.includes(normTarget) ||
+        (normTarget.includes(normHeard) && normHeard.length >= 3)
+      );
 
       if (isMatch) {
-        // ACERTOU -> FICA VERDE E AVANÇA
+        // ACERTOU -> FICA VERDE E AVANÇA APÓS PAUSA
         deck.hits++;
         box.className = 'auto-speech-box state-green';
         if (statusEl) {
-          statusEl.textContent = `✅ ¡Excelente! ("${transcript}")`;
+          statusEl.textContent = `✅ ¡Excelente! ("${currentItem.word}")`;
           statusEl.style.color = '#1b7f75';
         }
-        setTimeout(() => advanceSpeechDeck(), 1200);
+        deckTimer = setTimeout(() => advanceSpeechDeck(), 1500);
       } else {
         deck.attemptsOnCurrent++;
 
         if (deck.attemptsOnCurrent === 1) {
-          // 1º ERRO -> REPETE A PRONÚNCIA CORRETA E DÁ NOVA CHANCE
+          // 1º ERRO -> FALA A PRONÚNCIA CORRETA, AGUARDA TERMINAR + BUFFER E REABRE O MIC
           box.className = 'auto-speech-box state-warn';
           if (statusEl) {
-            statusEl.textContent = transcript
-              ? `Ouvi "${transcript}". 🔊 Ouça e repita!`
-              : `Não ouvi bem. 🔊 Ouça a pronúncia e tente novamente!`;
+            statusEl.textContent = firstHeardWord
+              ? `Ouvi "${firstHeardWord}". 🔊 Ouça a pronúncia correta...`
+              : `Não ouvi bem. 🔊 Ouça a pronúncia correta...`;
             statusEl.style.color = '#b57c00';
           }
+
           hablarPronunciacionCorrecta(currentItem.word, () => {
-            setTimeout(() => triggerDeckListen(), 400);
+            if (!activeDeck || activeDeck.qId !== deck.qId) return;
+            deckTimer = setTimeout(() => {
+              if (!activeDeck || activeDeck.qId !== deck.qId) return;
+              triggerDeckListen();
+            }, 700);
           });
         } else {
-          // 2º ERRO
+          // 2º ERRO -> PULA PARA A PRÓXIMA E AGENDA REVISÃO NO FINAL
           box.className = 'auto-speech-box state-error';
           if (!currentItem.isRetry) {
-            // PULA PARA A PRÓXIMA E AGENDA UMA TENTATIVA FINAL
             deck.queue.push({ word: currentItem.word, isRetry: true });
             if (statusEl) {
-              statusEl.textContent = `⏭️ Pulando para a próxima... Voltaremos nesta no final!`;
+              statusEl.textContent = `⏭️ Pulando... Voltaremos em "${currentItem.word.toUpperCase()}" no final!`;
               statusEl.style.color = '#c1121f';
             }
           } else {
-            // JÁ ERA A TENTATIVA FINAL -> REGISTRA ERRO E SEGUE
             deck.misses++;
             if (statusEl) {
               statusEl.textContent = `❌ Não foi dessa vez, mas vamos seguir!`;
               statusEl.style.color = '#c1121f';
             }
           }
-          setTimeout(() => advanceSpeechDeck(), 1400);
+          deckTimer = setTimeout(() => advanceSpeechDeck(), 1700);
         }
       }
     }
@@ -665,11 +741,12 @@
 
       if (activeDeck.index < activeDeck.queue.length) {
         renderSpeechCard();
-        triggerDeckListen();
+        // Pausa de 700ms para o usuário ler a nova palavra antes de ligar o microfone
+        deckTimer = setTimeout(() => triggerDeckListen(), 700);
       } else {
-        // FINALIZA O EXERCÍCIO MOSTRANDO ACERTOS E ERROS SEM BLOQUEAR
         const finishedDeck = activeDeck;
         activeDeck = null;
+        cleanupSpeechEngines();
 
         const box = document.getElementById(`deck-box-${finishedDeck.qId}`);
         box.className = 'auto-speech-box state-green';
@@ -684,24 +761,41 @@
       }
     }
 
-    // 7. SÍNTESE DE VOZ (KODULAR + NAVEGADOR)
+    // 7. SÍNTESE DE VOZ (KODULAR + NAVEGADOR COM TEMPO SEGURO CONTRA ECO)
     function hablarPronunciacionCorrecta(texto, onFinishCallback) {
+      const safeWaitMs = Math.max(2500, texto.length * 160);
+
       if (window.AppInventor) {
         window.AppInventor.setWebViewString("Falar_" + texto);
-        if (onFinishCallback) setTimeout(onFinishCallback, 1500);
-      } else if ('speechSynthesis' in window) {
+        if (onFinishCallback) {
+          deckTimer = setTimeout(onFinishCallback, safeWaitMs);
+        }
+        return;
+      }
+
+      if ('speechSynthesis' in window) {
         const synth = window.speechSynthesis;
         synth.cancel();
         const utterThis = new SpeechSynthesisUtterance(texto);
         utterThis.lang = 'es-ES';
         utterThis.rate = 0.92;
+
+        let callbackCalled = false;
+        const finishOnce = () => {
+          if (callbackCalled) return;
+          callbackCalled = true;
+          if (onFinishCallback) onFinishCallback();
+        };
+
+        utterThis.onend = () => setTimeout(finishOnce, 300);
+        utterThis.onerror = () => setTimeout(finishOnce, 300);
+        // Segurança caso o WebView Android não dispare onend
         if (onFinishCallback) {
-          utterThis.onend = onFinishCallback;
-          utterThis.onerror = onFinishCallback;
+          setTimeout(finishOnce, safeWaitMs + 800);
         }
         synth.speak(utterThis);
       } else if (onFinishCallback) {
-        setTimeout(onFinishCallback, 1000);
+        deckTimer = setTimeout(onFinishCallback, 1200);
       }
     }
 
@@ -719,6 +813,7 @@
     }
 
     function exitLesson() {
+      cleanupSpeechEngines();
       if (completedQuestions.size > 0) saveUserProgress(completedQuestions.size * 10);
       voltarParaAulasBasicas();
     }
