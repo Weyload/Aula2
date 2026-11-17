@@ -56,7 +56,7 @@
       25%, 75% { background: #ff9f1c; border-color: #f77f00; color: #ffffff; transform: scale(1.03); }
     }
 
-    /* --- DINÂMICA 3: CARDS DE FALA AUTOMÁTICOS --- */
+    /* --- DINÂMICA 3: PLAYLIST DE FALA COM BOTÃO MANUAL --- */
     .auto-speech-box { background: #eef4f8; border-radius: 16px; padding: 18px; text-align: center; border: 2px solid #d0e1f9; transition: all 0.3s ease; }
     .auto-speech-box.state-green { background: #d8f8f5; border-color: #2ec4b6; }
     .auto-speech-box.state-warn { background: #fff3d6; border-color: #ffb703; }
@@ -64,8 +64,10 @@
     .start-speech-btn { background: #0b2545; color: #ffb703; border: none; padding: 13px 22px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(11, 37, 69, 0.25); }
     .speech-card-counter { font-size: 12px; font-weight: 900; color: #5c677d; margin-bottom: 6px; }
     .speech-target-big { font-size: 24px; font-weight: 900; color: #0b2545; margin: 10px 0; letter-spacing: 0.5px; }
-    .speech-status-msg { font-size: 13px; font-weight: 800; color: #5c677d; min-height: 20px; margin-top: 8px; }
-    .mic-btn { width: 55px; height: 55px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: inline-flex; align-items: center; justify-content: center; margin-top: 6px; }
+    .speech-status-msg { font-size: 13px; font-weight: 800; color: #5c677d; min-height: 20px; margin-top: 10px; line-height: 1.4; }
+    .mic-btn { width: 58px; height: 58px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 25px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: inline-flex; align-items: center; justify-content: center; margin-top: 6px; transition: transform 0.15s; }
+    .mic-btn:active { transform: scale(0.94); }
+    .mic-btn:disabled { opacity: 0.5; cursor: default; }
     .mic-btn.listening { animation: pulse 1s infinite; background: #e63946; color: #fff; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); } }
     .speech-summary { font-size: 14px; font-weight: 900; color: #0b2545; line-height: 1.6; }
@@ -308,17 +310,17 @@
       </div>
     </div>
 
-    <!-- EXERCÍCIO 14: CARDS DE FALA AUTOMÁTICOS - PARTE 1 -->
+    <!-- EXERCÍCIO 14: PLAYLIST DE FALA COM BOTÃO MANUAL - PARTE 1 -->
     <div class="exercise-card" id="q14">
-      <div class="question-text">14. Cards de Fala Automáticos (1/2): Pronuncie as palavras que aparecerem na tela:</div>
+      <div class="question-text">14. Prática de Fala (1/2): Toque no microfone abaixo de cada palavra para pronunciar:</div>
       <div class="auto-speech-box" id="deck-box-q14">
         <button class="start-speech-btn" onclick="startSpeechDeck('q14', ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'])">🎙️ Iniciar Prática de Fala</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 15: CARDS DE FALA AUTOMÁTICOS - PARTE 2 -->
+    <!-- EXERCÍCIO 15: PLAYLIST DE FALA COM BOTÃO MANUAL - PARTE 2 -->
     <div class="exercise-card" id="q15">
-      <div class="question-text">15. Cards de Fala Automáticos (2/2): Complete o treino de pronúncia do diálogo:</div>
+      <div class="question-text">15. Prática de Fala (2/2): Complete o treino de pronúncia do diálogo:</div>
       <div class="auto-speech-box" id="deck-box-q15">
         <button class="start-speech-btn" onclick="startSpeechDeck('q15', ['Bien', 'Nombre', 'Por favor', 'Hasta pronto'])">🎙️ Iniciar Prática de Fala</button>
       </div>
@@ -397,6 +399,31 @@
       }
     }
 
+    // SOM DE ACERTO EM 2 NOTAS ASCENDENTES (APENAS EXERCÍCIOS 1 A 13)
+    function playCorrectSound() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        const notes = [523.25, 783.99]; // Dó5 -> Sol5 (2 notas crescentes)
+
+        notes.forEach((freq, index) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+
+          const startTime = ctx.currentTime + index * 0.1;
+          gain.gain.setValueAtTime(0.22, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.28);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(startTime);
+          osc.stop(startTime + 0.28);
+        });
+      } catch (e) {}
+    }
+
     // 3. MÚLTIPLA ESCOLHA E COMPLETAR FRASE
     function checkAnswer(btn, isCorrect, qId) {
       if (completedQuestions.has(qId)) return;
@@ -406,6 +433,7 @@
       if (isCorrect) {
         btn.classList.add('correct');
         buttons.forEach(b => b.disabled = true);
+        playCorrectSound();
         markQuestionDone(qId);
       } else {
         btn.classList.add('wrong');
@@ -432,6 +460,7 @@
       if (isCorrect) {
         btn.classList.add('correct');
         buttons.forEach(b => b.disabled = true);
+        playCorrectSound();
         markQuestionDone(qId);
       } else {
         btn.classList.add('wrong');
@@ -483,6 +512,7 @@
         firstBtn.disabled = true;
         btn.disabled = true;
         state.matchedCount++;
+        playCorrectSound();
 
         if (state.matchedCount >= 6) {
           markQuestionDone(qId);
@@ -498,14 +528,32 @@
       }
     }
 
-    // 6. CARDS DE FALA DE TROCA AUTOMÁTICA (MESMO MOTOR DA AULA 1)
+    // 6. PLAYLIST DE FALA COM ACIONAMENTO MANUAL PELO BOTÃO (EXERCÍCIOS 14 E 15)
+    const deckInitialWords = {
+      q14: ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'],
+      q15: ['Bien', 'Nombre', 'Por favor', 'Hasta pronto']
+    };
+
     let activeDeck = null;
     let deckTimer = null;
 
     function startSpeechDeck(qId, wordList) {
+      if (completedQuestions.has(qId)) return;
+
       if (deckTimer) {
         clearTimeout(deckTimer);
         deckTimer = null;
+      }
+
+      // Se havia outro deck aberto e não concluído, restaura o botão inicial dele
+      if (activeDeck && activeDeck.qId !== qId && !completedQuestions.has(activeDeck.qId)) {
+        const prevQId = activeDeck.qId;
+        const prevBox = document.getElementById(`deck-box-${prevQId}`);
+        const prevWords = JSON.stringify(deckInitialWords[prevQId]).replace(/"/g, "'");
+        if (prevBox) {
+          prevBox.className = 'auto-speech-box';
+          prevBox.innerHTML = `<button class="start-speech-btn" onclick="startSpeechDeck('${prevQId}', ${prevWords})">🎙️ Iniciar Prática de Fala</button>`;
+        }
       }
 
       activeDeck = {
@@ -514,30 +562,30 @@
         index: 0,
         attemptsOnCurrent: 0,
         hits: 0,
-        misses: 0
+        misses: 0,
+        isTransitioning: false
       };
 
       renderSpeechCard();
-      triggerDeckListen(true);
     }
 
     function renderSpeechCard() {
       if (!activeDeck) return;
       const box = document.getElementById(`deck-box-${activeDeck.qId}`);
       const currentItem = activeDeck.queue[activeDeck.index];
-      const retryBadge = currentItem.isRetry ? ' (Tentativa Final)' : '';
+      const retryBadge = currentItem.isRetry ? ' (Repescagem)' : '';
 
       box.className = 'auto-speech-box';
       box.innerHTML = `
-        <div class="speech-card-counter">Card ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
+        <div class="speech-card-counter">Palavra ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
         <div class="speech-target-big">${currentItem.word.toUpperCase()}</div>
-        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="triggerDeckListen(true)">🎙️</button>
-        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Toque no 🎙️ para falar</div>
+        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="triggerDeckListen()">🎙️</button>
+        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Toque no microfone 🎙️ e fale a palavra</div>
       `;
     }
 
-    function triggerDeckListen(isUserTap) {
-      if (!activeDeck) return;
+    function triggerDeckListen() {
+      if (!activeDeck || activeDeck.isTransitioning) return;
       const currentItem = activeDeck.queue[activeDeck.index];
       if (!currentItem) return;
 
@@ -548,14 +596,14 @@
       if (window.AppInventor) {
         if (micBtn) micBtn.classList.add('listening');
         if (statusEl) {
-          statusEl.innerHTML = "🎙️ Ouvindo... Fale agora!";
+          statusEl.innerHTML = `🎙️ Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
           statusEl.style.color = "#ffb703";
         }
         window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
         return;
       }
 
-      // Fallback caso não exista API de voz no navegador
+      // Fallback caso o navegador não suporte SpeechRecognition
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
         processarResultadoVoz(currentItem.word);
         return;
@@ -565,52 +613,30 @@
       const recognition = new SpeechRecognition();
       recognition.lang = 'es-ES';
 
-      let didStart = false;
-      const deckRef = activeDeck;
-      const indexRef = activeDeck.index;
+      if (micBtn) micBtn.classList.add('listening');
+      if (statusEl) {
+        statusEl.innerHTML = `🎙️ Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
+        statusEl.style.color = '#0b2545';
+      }
 
-      recognition.onstart = function() {
-        didStart = true;
-        if (micBtn) micBtn.classList.add('listening');
-        if (statusEl) {
-          statusEl.innerHTML = `Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
-          statusEl.style.color = '#0b2545';
-        }
-      };
+      recognition.start();
 
       recognition.onresult = function(event) {
-        if (!activeDeck || activeDeck !== deckRef || activeDeck.index !== indexRef) return;
         if (micBtn) micBtn.classList.remove('listening');
         processarResultadoVoz(event.results[0][0].transcript);
       };
 
       recognition.onerror = function() {
-        if (!activeDeck || activeDeck !== deckRef || activeDeck.index !== indexRef) return;
         if (micBtn) micBtn.classList.remove('listening');
-
-        // Se o navegador bloqueou abertura automática sem toque, apenas aguarda o toque no botão 🎙️
-        if (!didStart && !isUserTap) {
-          if (statusEl) {
-            statusEl.innerHTML = `Toque no 🎙️ para dizer "${currentItem.word.toUpperCase()}"`;
-            statusEl.style.color = '#0b2545';
-          }
-          return;
-        }
         processarResultadoVoz("");
       };
 
-      try {
-        recognition.start();
-      } catch (e) {
+      recognition.onend = function() {
         if (micBtn) micBtn.classList.remove('listening');
-        if (statusEl) {
-          statusEl.innerHTML = `Toque no 🎙️ para dizer "${currentItem.word.toUpperCase()}"`;
-          statusEl.style.color = '#0b2545';
-        }
-      }
+      };
     }
 
-    // Mesma função global chamada pelo Kodular App Inventor na Aula 1
+    // Função chamada pelo Kodular App Inventor ao terminar de ouvir
     function receberTextoVoz(textoOuvido) {
       if (!activeDeck) return;
       const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
@@ -619,13 +645,14 @@
     }
 
     function processarResultadoVoz(transcript) {
-      if (!activeDeck) return;
+      if (!activeDeck || activeDeck.isTransitioning) return;
       const deck = activeDeck;
       const currentItem = deck.queue[deck.index];
       if (!currentItem) return;
 
       const box = document.getElementById(`deck-box-${deck.qId}`);
       const statusEl = document.getElementById(`deck-status-${deck.qId}`);
+      const micBtn = document.getElementById(`deck-mic-${deck.qId}`);
 
       let normTarget = currentItem.word.toLowerCase().trim()
         .replace(/[¿?¡!.,]/g, '')
@@ -642,8 +669,11 @@
         .replace(/\badios\b/g, "adios");
 
       if (transcript !== "" && (normTranscript.includes(normTarget) || normTranscript.includes(normTarget.replace('ñ', 'n')))) {
-        // ACERTOU -> FICA VERDE E AVANÇA AUTOMATICAMENTE
+        // ACERTOU -> FICA VERDE E TROCA PARA A PRÓXIMA PALAVRA (SEM TOCAR O SOM DE 2 NOTAS)
         deck.hits++;
+        deck.isTransitioning = true;
+        if (micBtn) micBtn.disabled = true;
+
         box.className = 'auto-speech-box state-green';
         if (statusEl) {
           statusEl.innerHTML = `✅ Muito bem! ("${transcript}")`;
@@ -654,31 +684,31 @@
         deck.attemptsOnCurrent++;
 
         if (deck.attemptsOnCurrent === 1) {
-          // 1º ERRO -> REPETE A PRONÚNCIA CORRETA E DÁ NOVA CHANCE
+          // 1º ERRO -> FALA A PRONÚNCIA CORRETA E DEIXA O BOTÃO PRONTO PARA O USUÁRIO APERTAR
           box.className = 'auto-speech-box state-warn';
           if (statusEl) {
             statusEl.innerHTML = transcript
-              ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia e tente de novo!`
-              : `Não ouvi bem. 🔊 Ouça a pronúncia e tente de novo!`;
+              ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`
+              : `Não ouvi bem. 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`;
             statusEl.style.color = '#b57c00';
           }
           hablarPronunciacionCorrecta(currentItem.word);
-          deckTimer = setTimeout(() => {
-            if (activeDeck === deck) triggerDeckListen(false);
-          }, 1800);
         } else {
-          // 2º ERRO -> PULA PARA O PRÓXIMO CARD E VOLTA UMA VEZ NO FINAL
+          // 2º ERRO -> MANDA PARA REPESCAGEM NO FINAL E AVANÇA PARA A PRÓXIMA PALAVRA
+          deck.isTransitioning = true;
+          if (micBtn) micBtn.disabled = true;
           box.className = 'auto-speech-box state-error';
+
           if (!currentItem.isRetry) {
             deck.queue.push({ word: currentItem.word, isRetry: true });
             if (statusEl) {
-              statusEl.innerHTML = `⏭️ Pulando... Voltaremos em "${currentItem.word.toUpperCase()}" no final!`;
+              statusEl.innerHTML = `⏭️ Pulando... "${currentItem.word.toUpperCase()}" voltará na repescagem no final!`;
               statusEl.style.color = '#c1121f';
             }
           } else {
             deck.misses++;
             if (statusEl) {
-              statusEl.innerHTML = `❌ Vamos seguir para concluir!`;
+              statusEl.innerHTML = `❌ Não foi dessa vez. Seguindo...`;
               statusEl.style.color = '#c1121f';
             }
           }
@@ -691,10 +721,11 @@
       if (!activeDeck) return;
       activeDeck.index++;
       activeDeck.attemptsOnCurrent = 0;
+      activeDeck.isTransitioning = false;
 
       if (activeDeck.index < activeDeck.queue.length) {
+        // Mostra a próxima palavra e deixa o botão 🎙️ parado esperando ser acionado
         renderSpeechCard();
-        deckTimer = setTimeout(() => triggerDeckListen(false), 600);
       } else {
         const finishedDeck = activeDeck;
         activeDeck = null;
