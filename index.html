@@ -528,7 +528,104 @@
       }
     }
 
-    // 6. PLAYLIST DE FALA COM ACIONAMENTO MANUAL PELO BOTÃO (EXERCÍCIOS 14 E 15)
+    // 6. RECONHECIMENTO DE VOZ (INSTÂNCIA ÚNICA + LEVENSHTEIN IGUAL AO CÓDIGO QUE FUNCIONA)
+    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let reconhecedor = null;
+    let microfoneAtivo = false;
+    let resultadoRecebidoNaSessao = false;
+
+    if (Recognition) {
+      reconhecedor = new Recognition();
+      reconhecedor.lang = 'es-ES';
+      reconhecedor.continuous = false;
+      reconhecedor.interimResults = false;
+
+      reconhecedor.onresult = (event) => {
+        resultadoRecebidoNaSessao = true;
+        const textoFalado = event.results[0][0].transcript.trim();
+        DesativarMicrofone();
+        processarResultadoVoz(textoFalado);
+      };
+
+      reconhecedor.onend = () => {
+        microfoneAtivo = false;
+        if (!activeDeck) return;
+        const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
+        if (micBtn) micBtn.classList.remove('listening');
+
+        // Se o microfone fechou por silêncio sem receber fala, apenas libera o botão sem contar erro
+        if (!resultadoRecebidoNaSessao && !activeDeck.isTransitioning) {
+          const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
+          if (statusEl) {
+            statusEl.innerHTML = 'Toque no microfone 🎙️ e fale a palavra';
+            statusEl.style.color = '#5c677d';
+          }
+        }
+      };
+    }
+
+    function AtivarMicrofone() {
+      if (reconhecedor && !microfoneAtivo) {
+        try {
+          resultadoRecebidoNaSessao = false;
+          reconhecedor.start();
+          microfoneAtivo = true;
+        } catch (e) {}
+      }
+    }
+
+    function DesativarMicrofone() {
+      if (reconhecedor && microfoneAtivo) {
+        try {
+          reconhecedor.stop();
+          microfoneAtivo = false;
+        } catch (e) {}
+      }
+    }
+
+    function limparTextoParaComparacao(texto) {
+      return texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w\s]/gi, '')
+        .toLowerCase()
+        .trim();
+    }
+
+    function obterDistanciaLevenshtein(a, b) {
+      const matriz = [];
+      for (let i = 0; i <= b.length; i++) matriz[i] = [i];
+      for (let j = 0; j <= a.length; j++) matriz[0][j] = j;
+
+      for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+          if (b.charAt(i - 1) === a.charAt(j - 1)) {
+            matriz[i][j] = matriz[i - 1][j - 1];
+          } else {
+            matriz[i][j] = Math.min(
+              matriz[i - 1][j - 1] + 1,
+              matriz[i][j - 1] + 1,
+              matriz[i - 1][j] + 1
+            );
+          }
+        }
+      }
+      return matriz[b.length][a.length];
+    }
+
+    function verificarAproximidade(palavraFalada, palavraCorreta) {
+      const faladaLimpa = limparTextoParaComparacao(palavraFalada);
+      const corretaLimpa = limparTextoParaComparacao(palavraCorreta);
+      if (!faladaLimpa) return false;
+
+      if (faladaLimpa.includes(corretaLimpa)) return true;
+
+      const distancia = obterDistanciaLevenshtein(faladaLimpa, corretaLimpa);
+      const toleranciaMaxima = corretaLimpa.length <= 4 ? 1 : 2;
+      return distancia <= toleranciaMaxima;
+    }
+
+    // PLAYLIST DE FALA COM BOTÃO MANUAL (EXERCÍCIOS 14 E 15)
     const deckInitialWords = {
       q14: ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'],
       q15: ['Bien', 'Nombre', 'Por favor', 'Hasta pronto']
@@ -540,12 +637,12 @@
     function startSpeechDeck(qId, wordList) {
       if (completedQuestions.has(qId)) return;
 
+      DesativarMicrofone();
       if (deckTimer) {
         clearTimeout(deckTimer);
         deckTimer = null;
       }
 
-      // Se havia outro deck aberto e não concluído, restaura o botão inicial dele
       if (activeDeck && activeDeck.qId !== qId && !completedQuestions.has(activeDeck.qId)) {
         const prevQId = activeDeck.qId;
         const prevBox = document.getElementById(`deck-box-${prevQId}`);
@@ -592,26 +689,20 @@
       const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
       const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
 
-      // Modo Kodular App Inventor (idêntico à Aula 1)
-      if (window.AppInventor) {
-        if (micBtn) micBtn.classList.add('listening');
-        if (statusEl) {
-          statusEl.innerHTML = `🎙️ Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
-          statusEl.style.color = "#ffb703";
-        }
-        window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
-        return;
-      }
-
-      // Fallback caso o navegador não suporte SpeechRecognition
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      if (!reconhecedor) {
         processarResultadoVoz(currentItem.word);
         return;
       }
 
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'es-ES';
+      if (microfoneAtivo) {
+        DesativarMicrofone();
+        if (micBtn) micBtn.classList.remove('listening');
+        if (statusEl) {
+          statusEl.innerHTML = 'Toque no microfone 🎙️ e fale a palavra';
+          statusEl.style.color = '#5c677d';
+        }
+        return;
+      }
 
       if (micBtn) micBtn.classList.add('listening');
       if (statusEl) {
@@ -619,24 +710,9 @@
         statusEl.style.color = '#0b2545';
       }
 
-      recognition.start();
-
-      recognition.onresult = function(event) {
-        if (micBtn) micBtn.classList.remove('listening');
-        processarResultadoVoz(event.results[0][0].transcript);
-      };
-
-      recognition.onerror = function() {
-        if (micBtn) micBtn.classList.remove('listening');
-        processarResultadoVoz("");
-      };
-
-      recognition.onend = function() {
-        if (micBtn) micBtn.classList.remove('listening');
-      };
+      AtivarMicrofone();
     }
 
-    // Função chamada pelo Kodular App Inventor ao terminar de ouvir
     function receberTextoVoz(textoOuvido) {
       if (!activeDeck) return;
       const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
@@ -654,21 +730,7 @@
       const statusEl = document.getElementById(`deck-status-${deck.qId}`);
       const micBtn = document.getElementById(`deck-mic-${deck.qId}`);
 
-      let normTarget = currentItem.word.toLowerCase().trim()
-        .replace(/[¿?¡!.,]/g, '')
-        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]));
-
-      let normTranscript = transcript.toLowerCase().trim()
-        .replace(/[¿?¡!.,]/g, '')
-        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]))
-        .replace(/\bestou\b/g, "estoy")
-        .replace(/\bola\b/g, "hola")
-        .replace(/\basta\b/g, "hasta")
-        .replace(/\bdise\b/g, "dice")
-        .replace(/\bgrasias\b/g, "gracias")
-        .replace(/\badios\b/g, "adios");
-
-      if (transcript !== "" && (normTranscript.includes(normTarget) || normTranscript.includes(normTarget.replace('ñ', 'n')))) {
+      if (verificarAproximidade(transcript, currentItem.word)) {
         // ACERTOU -> FICA VERDE E TROCA PARA A PRÓXIMA PALAVRA (SEM TOCAR O SOM DE 2 NOTAS)
         deck.hits++;
         deck.isTransitioning = true;
@@ -687,9 +749,7 @@
           // 1º ERRO -> FALA A PRONÚNCIA CORRETA E DEIXA O BOTÃO PRONTO PARA O USUÁRIO APERTAR
           box.className = 'auto-speech-box state-warn';
           if (statusEl) {
-            statusEl.innerHTML = transcript
-              ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`
-              : `Não ouvi bem. 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`;
+            statusEl.innerHTML = `Ouvi "${transcript}". 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`;
             statusEl.style.color = '#b57c00';
           }
           hablarPronunciacionCorrecta(currentItem.word);
@@ -724,7 +784,6 @@
       activeDeck.isTransitioning = false;
 
       if (activeDeck.index < activeDeck.queue.length) {
-        // Mostra a próxima palavra e deixa o botão 🎙️ parado esperando ser acionado
         renderSpeechCard();
       } else {
         const finishedDeck = activeDeck;
@@ -743,7 +802,7 @@
       }
     }
 
-    // 7. SÍNTESE DE VOZ (IDÊNTICA À AULA 1)
+    // 7. SÍNTESE DE VOZ
     function hablarPronunciacionCorrecta(texto) {
       if (window.AppInventor) {
         window.AppInventor.setWebViewString("Falar_" + texto);
@@ -769,6 +828,7 @@
     }
 
     function exitLesson() {
+      DesativarMicrofone();
       if (deckTimer) clearTimeout(deckTimer);
       if (completedQuestions.size > 0) saveUserProgress(completedQuestions.size * 10);
       voltarParaAulasBasicas();
