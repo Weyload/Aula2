@@ -498,38 +498,15 @@
       }
     }
 
-    // 6. CARDS DE FALA DE TROCA AUTOMÁTICA
+    // 6. CARDS DE FALA DE TROCA AUTOMÁTICA (MESMO MOTOR DA AULA 1)
     let activeDeck = null;
-    let currentRecognition = null;
     let deckTimer = null;
-    let endGraceTimer = null;
-    let listenSessionCounter = 0;
 
-    function cleanupSpeechEngines() {
+    function startSpeechDeck(qId, wordList) {
       if (deckTimer) {
         clearTimeout(deckTimer);
         deckTimer = null;
       }
-      if (endGraceTimer) {
-        clearTimeout(endGraceTimer);
-        endGraceTimer = null;
-      }
-      if (currentRecognition) {
-        try {
-          currentRecognition.onresult = null;
-          currentRecognition.onerror = null;
-          currentRecognition.onend = null;
-          currentRecognition.stop();
-        } catch (e) {}
-        currentRecognition = null;
-      }
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch (e) {}
-      }
-    }
-
-    function startSpeechDeck(qId, wordList) {
-      cleanupSpeechEngines();
 
       activeDeck = {
         qId: qId,
@@ -537,14 +514,11 @@
         index: 0,
         attemptsOnCurrent: 0,
         hits: 0,
-        misses: 0,
-        awaitingSpeech: false,
-        sessionId: 0
+        misses: 0
       };
 
       renderSpeechCard();
-      // Inicia imediatamente no clique do usuário para garantir permissão do microfone
-      triggerDeckListen();
+      triggerDeckListen(true);
     }
 
     function renderSpeechCard() {
@@ -557,224 +531,158 @@
       box.innerHTML = `
         <div class="speech-card-counter">Card ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
         <div class="speech-target-big">${currentItem.word.toUpperCase()}</div>
-        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="manualTriggerDeckListen()">🎙️</button>
-        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Toque no microfone ou fale agora</div>
+        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="triggerDeckListen(true)">🎙️</button>
+        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Toque no 🎙️ para falar</div>
       `;
     }
 
-    function manualTriggerDeckListen() {
-      if (!activeDeck) return;
-      cleanupSpeechEngines();
-      triggerDeckListen();
-    }
-
-    function triggerDeckListen() {
+    function triggerDeckListen(isUserTap) {
       if (!activeDeck) return;
       const currentItem = activeDeck.queue[activeDeck.index];
       if (!currentItem) return;
 
-      if (endGraceTimer) {
-        clearTimeout(endGraceTimer);
-        endGraceTimer = null;
-      }
-
-      if (currentRecognition) {
-        try {
-          currentRecognition.onresult = null;
-          currentRecognition.onerror = null;
-          currentRecognition.onend = null;
-          currentRecognition.stop();
-        } catch (e) {}
-        currentRecognition = null;
-      }
-
-      listenSessionCounter++;
-      const thisSession = listenSessionCounter;
-      activeDeck.sessionId = thisSession;
-      activeDeck.awaitingSpeech = true;
-
       const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
       const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
-      if (micBtn) micBtn.classList.add('listening');
-      if (statusEl) {
-        statusEl.textContent = `🎙️ Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
-        statusEl.style.color = '#0b2545';
-      }
 
-      // Modo Kodular App Inventor
+      // Modo Kodular App Inventor (idêntico à Aula 1)
       if (window.AppInventor) {
+        if (micBtn) micBtn.classList.add('listening');
+        if (statusEl) {
+          statusEl.innerHTML = "🎙️ Ouvindo... Fale agora!";
+          statusEl.style.color = "#ffb703";
+        }
         window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
         return;
       }
 
-      // Fallback caso o navegador não tenha API de voz
+      // Fallback caso não exista API de voz no navegador
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        deckTimer = setTimeout(() => {
-          if (activeDeck && activeDeck.awaitingSpeech && activeDeck.sessionId === thisSession) {
-            processDeckSpeechResult(currentItem.word, thisSession);
-          }
-        }, 1000);
+        processarResultadoVoz(currentItem.word);
         return;
       }
 
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
-      currentRecognition = recognition;
       recognition.lang = 'es-ES';
-      recognition.continuous = false;
-      recognition.interimResults = false;
 
-      recognition.onresult = function(event) {
-        if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
-        if (endGraceTimer) {
-          clearTimeout(endGraceTimer);
-          endGraceTimer = null;
-        }
-        if (micBtn) micBtn.classList.remove('listening');
+      let didStart = false;
+      const deckRef = activeDeck;
+      const indexRef = activeDeck.index;
 
-        let candidates = [];
-        if (event.results && event.results[0]) {
-          for (let i = 0; i < event.results[0].length; i++) {
-            candidates.push(event.results[0][i].transcript);
-          }
+      recognition.onstart = function() {
+        didStart = true;
+        if (micBtn) micBtn.classList.add('listening');
+        if (statusEl) {
+          statusEl.innerHTML = `Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
+          statusEl.style.color = '#0b2545';
         }
-        processDeckSpeechResult(candidates.join(" | "), thisSession, candidates[0] || "");
       };
 
-      recognition.onerror = function(event) {
-        if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
-        if (endGraceTimer) {
-          clearTimeout(endGraceTimer);
-          endGraceTimer = null;
-        }
+      recognition.onresult = function(event) {
+        if (!activeDeck || activeDeck !== deckRef || activeDeck.index !== indexRef) return;
+        if (micBtn) micBtn.classList.remove('listening');
+        processarResultadoVoz(event.results[0][0].transcript);
+      };
+
+      recognition.onerror = function() {
+        if (!activeDeck || activeDeck !== deckRef || activeDeck.index !== indexRef) return;
         if (micBtn) micBtn.classList.remove('listening');
 
-        if (event && event.error === 'not-allowed') {
-          activeDeck.awaitingSpeech = false;
+        // Se o navegador bloqueou abertura automática sem toque, apenas aguarda o toque no botão 🎙️
+        if (!didStart && !isUserTap) {
           if (statusEl) {
-            statusEl.textContent = "Permissão de microfone negada. Toque em 🎙️ para tentar.";
-            statusEl.style.color = '#e63946';
+            statusEl.innerHTML = `Toque no 🎙️ para dizer "${currentItem.word.toUpperCase()}"`;
+            statusEl.style.color = '#0b2545';
           }
           return;
         }
-        processDeckSpeechResult("", thisSession, "");
-      };
-
-      recognition.onend = function() {
-        // Aguarda 900ms caso o onresult do Android chegue logo após o encerramento do áudio
-        if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
-        if (micBtn) micBtn.classList.remove('listening');
-
-        endGraceTimer = setTimeout(() => {
-          if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== thisSession) return;
-          processDeckSpeechResult("", thisSession, "");
-        }, 900);
+        processarResultadoVoz("");
       };
 
       try {
         recognition.start();
       } catch (e) {
         if (micBtn) micBtn.classList.remove('listening');
-        activeDeck.awaitingSpeech = false;
         if (statusEl) {
-          statusEl.textContent = "Toque no botão 🎙️ para falar";
+          statusEl.innerHTML = `Toque no 🎙️ para dizer "${currentItem.word.toUpperCase()}"`;
           statusEl.style.color = '#0b2545';
         }
       }
     }
 
+    // Mesma função global chamada pelo Kodular App Inventor na Aula 1
     function receberTextoVoz(textoOuvido) {
-      if (!activeDeck || !activeDeck.awaitingSpeech) return;
-      if (endGraceTimer) {
-        clearTimeout(endGraceTimer);
-        endGraceTimer = null;
-      }
+      if (!activeDeck) return;
       const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
       if (micBtn) micBtn.classList.remove('listening');
-      processDeckSpeechResult(textoOuvido, activeDeck.sessionId, textoOuvido);
+      processarResultadoVoz(textoOuvido);
     }
 
-    function normalizeSpanish(str) {
-      return str.toLowerCase().trim()
-        .replace(/[¿?¡!.,|]/g, ' ')
-        .replace(/[áàä]/g, 'a')
-        .replace(/[éèë]/g, 'e')
-        .replace(/[íìï]/g, 'i')
-        .replace(/[óòö]/g, 'o')
-        .replace(/[úùü]/g, 'u')
-        .replace(/ñ/g, 'n')
-        .replace(/v/g, 'b')
-        .replace(/\bhola\b|\bola\b/g, 'hola')
-        .replace(/\bhasta\b|\basta\b/g, 'hasta')
-        .replace(/\bgracias\b|\bgrasias\b|\bgracia\b/g, 'gracias')
-        .replace(/\badios\b|\ba dios\b/g, 'adios')
-        .replace(/\bmucho gusto\b|\bmucho gosto\b|\bmuito gusto\b/g, 'mucho gusto')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function processDeckSpeechResult(rawTranscript, sessionId, displayHeard) {
-      if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== sessionId) return;
-
-      activeDeck.awaitingSpeech = false;
-
+    function processarResultadoVoz(transcript) {
+      if (!activeDeck) return;
       const deck = activeDeck;
       const currentItem = deck.queue[deck.index];
+      if (!currentItem) return;
+
       const box = document.getElementById(`deck-box-${deck.qId}`);
       const statusEl = document.getElementById(`deck-status-${deck.qId}`);
 
-      const normTarget = normalizeSpanish(currentItem.word);
-      const normHeard = normalizeSpanish(rawTranscript);
-      const heardLabel = (displayHeard !== undefined ? displayHeard : rawTranscript).trim();
+      let normTarget = currentItem.word.toLowerCase().trim()
+        .replace(/[¿?¡!.,]/g, '')
+        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]));
 
-      const isMatch = normHeard !== "" && (
-        normHeard.includes(normTarget) ||
-        (normTarget.includes(normHeard) && normHeard.length >= 3)
-      );
+      let normTranscript = transcript.toLowerCase().trim()
+        .replace(/[¿?¡!.,]/g, '')
+        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]))
+        .replace(/\bestou\b/g, "estoy")
+        .replace(/\bola\b/g, "hola")
+        .replace(/\basta\b/g, "hasta")
+        .replace(/\bdise\b/g, "dice")
+        .replace(/\bgrasias\b/g, "gracias")
+        .replace(/\badios\b/g, "adios");
 
-      if (isMatch) {
+      if (transcript !== "" && (normTranscript.includes(normTarget) || normTranscript.includes(normTarget.replace('ñ', 'n')))) {
+        // ACERTOU -> FICA VERDE E AVANÇA AUTOMATICAMENTE
         deck.hits++;
         box.className = 'auto-speech-box state-green';
         if (statusEl) {
-          statusEl.textContent = `✅ ¡Excelente! ("${currentItem.word}")`;
+          statusEl.innerHTML = `✅ Muito bem! ("${transcript}")`;
           statusEl.style.color = '#1b7f75';
         }
-        deckTimer = setTimeout(() => advanceSpeechDeck(), 1400);
+        deckTimer = setTimeout(() => advanceSpeechDeck(), 1200);
       } else {
         deck.attemptsOnCurrent++;
 
         if (deck.attemptsOnCurrent === 1) {
+          // 1º ERRO -> REPETE A PRONÚNCIA CORRETA E DÁ NOVA CHANCE
           box.className = 'auto-speech-box state-warn';
           if (statusEl) {
-            statusEl.textContent = heardLabel
-              ? `Ouvi "${heardLabel}". 🔊 Ouça a pronúncia correta...`
-              : `Não ouvi bem. 🔊 Ouça a pronúncia correta...`;
+            statusEl.innerHTML = transcript
+              ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia e tente de novo!`
+              : `Não ouvi bem. 🔊 Ouça a pronúncia e tente de novo!`;
             statusEl.style.color = '#b57c00';
           }
-
-          hablarPronunciacionCorrecta(currentItem.word, () => {
-            if (!activeDeck || activeDeck.qId !== deck.qId) return;
-            deckTimer = setTimeout(() => {
-              if (!activeDeck || activeDeck.qId !== deck.qId) return;
-              triggerDeckListen();
-            }, 800);
-          });
+          hablarPronunciacionCorrecta(currentItem.word);
+          deckTimer = setTimeout(() => {
+            if (activeDeck === deck) triggerDeckListen(false);
+          }, 1800);
         } else {
+          // 2º ERRO -> PULA PARA O PRÓXIMO CARD E VOLTA UMA VEZ NO FINAL
           box.className = 'auto-speech-box state-error';
           if (!currentItem.isRetry) {
             deck.queue.push({ word: currentItem.word, isRetry: true });
             if (statusEl) {
-              statusEl.textContent = `⏭️ Pulando... Voltaremos em "${currentItem.word.toUpperCase()}" no final!`;
+              statusEl.innerHTML = `⏭️ Pulando... Voltaremos em "${currentItem.word.toUpperCase()}" no final!`;
               statusEl.style.color = '#c1121f';
             }
           } else {
             deck.misses++;
             if (statusEl) {
-              statusEl.textContent = `❌ Não foi dessa vez, mas vamos seguir!`;
+              statusEl.innerHTML = `❌ Vamos seguir para concluir!`;
               statusEl.style.color = '#c1121f';
             }
           }
-          deckTimer = setTimeout(() => advanceSpeechDeck(), 1600);
+          deckTimer = setTimeout(() => advanceSpeechDeck(), 1500);
         }
       }
     }
@@ -786,11 +694,10 @@
 
       if (activeDeck.index < activeDeck.queue.length) {
         renderSpeechCard();
-        deckTimer = setTimeout(() => triggerDeckListen(), 850);
+        deckTimer = setTimeout(() => triggerDeckListen(false), 600);
       } else {
         const finishedDeck = activeDeck;
         activeDeck = null;
-        cleanupSpeechEngines();
 
         const box = document.getElementById(`deck-box-${finishedDeck.qId}`);
         box.className = 'auto-speech-box state-green';
@@ -805,40 +712,15 @@
       }
     }
 
-    // 7. SÍNTESE DE VOZ (KODULAR + NAVEGADOR)
-    function hablarPronunciacionCorrecta(texto, onFinishCallback) {
-      const safeWaitMs = Math.max(2200, texto.length * 150);
-
+    // 7. SÍNTESE DE VOZ (IDÊNTICA À AULA 1)
+    function hablarPronunciacionCorrecta(texto) {
       if (window.AppInventor) {
         window.AppInventor.setWebViewString("Falar_" + texto);
-        if (onFinishCallback) {
-          deckTimer = setTimeout(onFinishCallback, safeWaitMs);
-        }
-        return;
-      }
-
-      if ('speechSynthesis' in window) {
+      } else if ('speechSynthesis' in window) {
         const synth = window.speechSynthesis;
-        synth.cancel();
         const utterThis = new SpeechSynthesisUtterance(texto);
         utterThis.lang = 'es-ES';
-        utterThis.rate = 0.92;
-
-        let callbackCalled = false;
-        const finishOnce = () => {
-          if (callbackCalled) return;
-          callbackCalled = true;
-          if (onFinishCallback) onFinishCallback();
-        };
-
-        utterThis.onend = () => setTimeout(finishOnce, 300);
-        utterThis.onerror = () => setTimeout(finishOnce, 300);
-        if (onFinishCallback) {
-          setTimeout(finishOnce, safeWaitMs + 700);
-        }
         synth.speak(utterThis);
-      } else if (onFinishCallback) {
-        deckTimer = setTimeout(onFinishCallback, 1200);
       }
     }
 
@@ -856,7 +738,7 @@
     }
 
     function exitLesson() {
-      cleanupSpeechEngines();
+      if (deckTimer) clearTimeout(deckTimer);
       if (completedQuestions.size > 0) saveUserProgress(completedQuestions.size * 10);
       voltarParaAulasBasicas();
     }
