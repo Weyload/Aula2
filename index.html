@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Aula 1 - Frases e Palavras | Fale&Go</title>
+  <title>Aula 2 - Conversa Inicial | Fale&Go</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; }
@@ -12,270 +12,317 @@
     .header { background: #081c33; padding: 14px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
     .back-btn { background: rgba(255,255,255,0.1); border: none; color: #ffb703; font-size: 20px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .header-title { font-size: 18px; font-weight: 800; color: #ffffff; }
-    
     .container { padding: 20px; max-width: 500px; margin: 0 auto; width: 100%; }
-
+    
     .mascot-section { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
-    .capybara-avatar { height: 110px; width: auto; display: block; flex-shrink: 0; }
+    .capybara-avatar { width: 70px; height: 70px; background: #ffb703; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 6px 16px rgba(0,0,0,0.3); flex-shrink: 0; border: 3px solid #ffffff; }
     .speech-bubble { background: #ffffff; color: #0b2545; padding: 14px 18px; border-radius: 18px; border-top-left-radius: 4px; font-size: 14px; font-weight: 700; line-height: 1.4; box-shadow: 0 6px 16px rgba(0,0,0,0.2); min-height: 70px; position: relative; flex: 1; }
     .cursor { display: inline-block; width: 2px; height: 14px; background-color: #0b2545; margin-left: 2px; animation: blink 0.7s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
-    .section-title { font-size: 18px; font-weight: 900; color: #ffb703; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; margin-bottom: 12px; gap: 10px; }
+    .section-title { font-size: 18px; font-weight: 900; color: #ffb703; display: flex; align-items: center; gap: 8px; }
     .progress-pill { background: #134074; color: #2ec4b6; border: 1px solid #1d5393; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; white-space: nowrap; }
 
-    .vocab-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #e1e9f0; line-height: 1.6; margin-bottom: 20px; font-weight: 700; }
-    .vocab-tag { display: inline-block; background: #134074; color: #ffb703; padding: 2px 8px; border-radius: 6px; font-weight: 800; margin: 2px; font-size: 12px; }
-
-    .video-intro { background: rgba(46, 196, 182, 0.15); border-left: 4px solid #2ec4b6; padding: 12px 14px; border-radius: 10px; font-size: 14px; font-weight: 800; color: #ffffff; margin: 24px 0 14px; line-height: 1.4; }
-    .video-card { background: #134074; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.3); margin-bottom: 25px; border: 2px solid #1d5393; }
-    .video-container { position: relative; padding-bottom: 56.25%; height: 0; }
-    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-    .video-info { padding: 12px 16px; font-size: 12px; color: #8da9c4; font-weight: 700; }
+    .vocab-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 12px 14px; font-size: 12px; color: #e1e9f0; line-height: 1.7; margin-bottom: 20px; font-weight: 700; }
+    .vocab-tag { display: inline-block; background: #134074; color: #ffb703; padding: 2px 7px; border-radius: 6px; font-weight: 800; margin: 2px 1px; font-size: 11px; }
 
     .exercise-card { background: #ffffff; color: #0b2545; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
     .question-text { font-size: 15px; font-weight: 800; margin-bottom: 14px; line-height: 1.4; }
-    
     .options-grid { display: flex; flex-direction: column; gap: 10px; }
     .opt-btn { background: #eef4f8; border: 2px solid #d0e1f9; padding: 12px 16px; border-radius: 12px; font-weight: 800; font-size: 14px; color: #0b2545; cursor: pointer; text-align: left; transition: all 0.2s; }
     .opt-btn:disabled { cursor: default; }
     .opt-btn.correct { background: #2ec4b6 !important; border-color: #2ec4b6 !important; color: #ffffff !important; }
     .opt-btn.wrong { background: #e63946 !important; border-color: #e63946 !important; color: #ffffff !important; opacity: 0.85; }
 
-    .voice-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 15px; background: #eef4f8; border-radius: 16px; }
-    .mic-btn { width: 55px; height: 55px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; justify-content: center; }
+    /* --- DINÂMICA 1: ÁUDIO SEM TEXTO + REVELAÇÃO --- */
+    .audio-prompt-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .audio-play-btn { background: #ffb703; color: #0b2545; border: none; padding: 11px 18px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(255, 183, 3, 0.35); transition: transform 0.15s; }
+    .audio-play-btn:active { transform: scale(0.96); }
+    .revealed-word { display: none; background: #0b2545; color: #ffb703; padding: 8px 14px; border-radius: 10px; font-weight: 900; font-size: 15px; letter-spacing: 0.5px; }
+    .revealed-word.visible { display: inline-block; animation: popIn 0.25s ease; }
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    /* --- DINÂMICA 2: LIGUE AS PALAVRAS (6 PARES) --- */
+    .match-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .match-col { display: flex; flex-direction: column; gap: 8px; }
+    .match-col-title { font-size: 11px; font-weight: 900; text-transform: uppercase; color: #5c677d; text-align: center; margin-bottom: 2px; }
+    .match-btn { background: #eef4f8; border: 2px solid #d0e1f9; padding: 10px 8px; border-radius: 12px; font-weight: 800; font-size: 13px; color: #0b2545; cursor: pointer; text-align: center; transition: all 0.2s; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+    .match-btn.selected { background: #134074; border-color: #ffb703; color: #ffffff; transform: scale(1.02); }
+    .match-btn.matched { background: #2ec4b6 !important; border-color: #2ec4b6 !important; color: #ffffff !important; cursor: default; opacity: 0.9; }
+    .match-btn.flash-orange { animation: orangeFlash 0.6s ease; }
+    @keyframes orangeFlash {
+      0%, 100% { background: #eef4f8; border-color: #d0e1f9; color: #0b2545; }
+      25%, 75% { background: #ff9f1c; border-color: #f77f00; color: #ffffff; transform: scale(1.03); }
+    }
+
+    /* --- DINÂMICA 3: PLAYLIST DE FALA COM BOTÃO MANUAL --- */
+    .auto-speech-box { background: #eef4f8; border-radius: 16px; padding: 18px; text-align: center; border: 2px solid #d0e1f9; transition: all 0.3s ease; }
+    .auto-speech-box.state-green { background: #d8f8f5; border-color: #2ec4b6; }
+    .auto-speech-box.state-warn { background: #fff3d6; border-color: #ffb703; }
+    .auto-speech-box.state-error { background: #ffe3e6; border-color: #e63946; }
+    .start-speech-btn { background: #0b2545; color: #ffb703; border: none; padding: 13px 22px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(11, 37, 69, 0.25); }
+    .speech-card-counter { font-size: 12px; font-weight: 900; color: #5c677d; margin-bottom: 6px; }
+    .speech-target-big { font-size: 24px; font-weight: 900; color: #0b2545; margin: 10px 0; letter-spacing: 0.5px; }
+    .speech-status-msg { font-size: 13px; font-weight: 800; color: #5c677d; min-height: 20px; margin-top: 10px; line-height: 1.4; }
+    .mic-btn { width: 58px; height: 58px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 25px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: inline-flex; align-items: center; justify-content: center; margin-top: 6px; transition: transform 0.15s; }
+    .mic-btn:active { transform: scale(0.94); }
+    .mic-btn:disabled { opacity: 0.5; cursor: default; }
     .mic-btn.listening { animation: pulse 1s infinite; background: #e63946; color: #fff; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); } }
+    .speech-summary { font-size: 14px; font-weight: 900; color: #0b2545; line-height: 1.6; }
 
-    .target-word.alt-active { color: #ffb703; background: rgba(255, 183, 3, 0.2); padding: 2px 8px; border-radius: 6px; border: 1px dashed #ffb703; font-weight: 900; }
-
-    /* --- EXERCÍCIO DE TRADUÇÃO DE IMAGENS --- */
-    .image-speak-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 14px; background: #eef4f8; border-radius: 16px; }
-    .clickable-img-wrap { position: relative; width: 100%; max-width: 240px; height: 175px; background: #ffffff; border: 3px solid #d0e1f9; border-radius: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: all 0.25s ease; }
-    .clickable-img-wrap:active { transform: scale(0.97); }
-    .clickable-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; pointer-events: none; }
-    .clickable-img-wrap.listening { border-color: #e63946; animation: pulse 1s infinite; }
-    .clickable-img-wrap.correct { border-color: #2ec4b6; background: #e6faf8; }
-    .clickable-img-wrap.wrong { border-color: #ffb703; background: #fff8e6; }
-    .img-mic-badge { position: absolute; bottom: 8px; right: 8px; background: #ffb703; color: #0b2545; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 3px 8px rgba(0,0,0,0.2); pointer-events: none; }
-    .clickable-img-wrap.listening .img-mic-badge { background: #e63946; color: #ffffff; }
-    .clickable-img-wrap.correct .img-mic-badge { background: #2ec4b6; color: #ffffff; }
-    .img-hint-label { font-size: 12px; font-weight: 800; color: #5c677d; }
-    .img-status-text { font-size: 13px; font-weight: 800; color: #0b2545; text-align: center; min-height: 20px; }
-    .swap-img-btn { background: #ffffff; color: #134074; border: 1px solid #cbd9ea; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; cursor: pointer; margin-top: 2px; }
-    .swap-img-btn:active { background: #dce7f5; }
-
+    /* --- MODAIS --- */
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
     .modal-overlay.show { display: flex; opacity: 1; visibility: visible; }
     .modal-box { background: #ffffff; color: #0b2545; padding: 24px; border-radius: 20px; text-align: center; max-width: 380px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
     .modal-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
     .modal-desc { font-size: 14px; color: #5c677d; font-weight: 700; line-height: 1.4; }
-    
     .btn-primary { background: #ffb703; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; }
     .btn-secondary { background: #e1e9f0; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; }
-    #victory-modal .modal-box { max-width: 340px; }
     .btn-continue { background: #ffb703; color: #0b2545; border: none; padding: 14px 28px; border-radius: 50px; font-weight: 900; font-size: 16px; margin-top: 20px; cursor: pointer; width: 100%; }
+    #victory-modal .modal-box { max-width: 340px; }
   </style>
 </head>
 <body>
 
-  <!-- TOPO COM BOTÃO DE SAÍDA (Abre o Modal de Salvar) -->
+  <!-- TOPO DA AULA -->
   <div class="header">
     <button class="back-btn" onclick="confirmExit()">←</button>
-    <div class="header-title">Aula 1: Palavras e frases - Básico</div>
+    <div class="header-title">Aula 2: Conversa Inicial</div>
   </div>
 
   <div class="container">
 
-    <!-- MASCOTE E MENSAGEM -->
     <div class="mascot-section">
-      <img class="capybara-avatar" src="BtCapivarA_Escutar-SemFundo.png" alt="Capivara">
+      <div class="capybara-avatar">🦫</div>
       <div class="speech-bubble">
         <span id="typed-text"></span><span class="cursor"></span>
       </div>
     </div>
 
     <div class="section-header">
-      <div class="section-title">🎯 Desafios da Aula</div>
-      <div class="progress-pill" id="progress-counter">0 / 16 concluidos</div>
+      <div class="section-title">🗣️ Fluxo da Conversa</div>
+      <div class="progress-pill" id="progress-counter">0 / 15 concluidos</div>
     </div>
 
     <div class="vocab-box">
-      Você vai aprender:<br>
-      <span class="vocab-tag">Nombre</span>
-      <span class="vocab-tag">Gusto</span>
-      <span class="vocab-tag">Años</span>
-      <span class="vocab-tag">Bien</span>
-      <span class="vocab-tag">Dónde</span>
-      <span class="vocab-tag">Trabajas</span>
-      <span class="vocab-tag">Número</span>
-      <span class="vocab-tag">Luego</span>
+      24 palavras vitais na ordem de um encontro:<br>
+      <span class="vocab-tag">Hola</span>
+      <span class="vocab-tag">Cómo</span>
       <span class="vocab-tag">Estás</span>
-      <span class="vocab-tag">Correo</span>
-      <span class="vocab-tag">Español</span>
-      <span class="vocab-tag">Llamar</span>
+      <span class="vocab-tag">Estoy</span>
+      <span class="vocab-tag">Bien</span>
+      <span class="vocab-tag">Genial</span>
+      <span class="vocab-tag">Gracias</span>
+      <span class="vocab-tag">Tú</span>
+      <span class="vocab-tag">Nombre</span>
+      <span class="vocab-tag">Me llamo</span>
+      <span class="vocab-tag">Soy</span>
+      <span class="vocab-tag">Llamas</span>
+      <span class="vocab-tag">Mucho gusto</span>
+      <span class="vocab-tag">Encantado</span>
+      <span class="vocab-tag">Disculpa</span>
+      <span class="vocab-tag">Libre</span>
+      <span class="vocab-tag">Por favor</span>
+      <span class="vocab-tag">Amigo</span>
+      <span class="vocab-tag">Me gusta</span>
+      <span class="vocab-tag">También</span>
+      <span class="vocab-tag">Bonito</span>
+      <span class="vocab-tag">De nada</span>
+      <span class="vocab-tag">Hasta pronto</span>
+      <span class="vocab-tag">Adiós</span>
     </div>
 
-    <!-- EXERCÍCIO 1 (ESCOLHA DE PALAVRA) -->
+    <!-- EXERCÍCIO 1: ÁUDIO SEM TEXTO (#1 Hola) -->
     <div class="exercise-card" id="q1">
-      <div class="question-text">1. Ao conhecer alguém pela primeira vez, qual palavra em espanhol significa "NOME"?</div>
+      <div class="question-text">1. Ouça a primeira palavra para iniciar qualquer conversa e escolha a tradução:</div>
+      <div class="audio-prompt-row">
+        <button class="audio-play-btn" onclick="playListeningWord('hola')">🔊 Ouvir palavra</button>
+        <span id="reveal-q1" class="revealed-word"></span>
+      </div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q1')">Correo</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q1')">Nombre</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q1')">Llamar</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q1', 'Hola', 'reveal-q1')">Olá</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q1', 'Hola', 'reveal-q1')">Adeus</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q1', 'Hola', 'reveal-q1')">Desculpa</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 2 (COMPLETAR A FRASE) -->
+    <!-- EXERCÍCIO 2: COMPLETAR A FRASE (#2 Cómo) -->
     <div class="exercise-card" id="q2">
-      <div class="question-text">2. Complete a frase de apresentação: "Mucho _____." (Prazer em conhecer você)</div>
+      <div class="question-text">2. Depois de cumprimentar, pergunte como a pessoa está: "¿_____ estás?"</div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Frío</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q2')">Gusto</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Sueño</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Dónde</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q2')">Cómo</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Quién</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 3 (ESCOLHA DE PALAVRA) -->
+    <!-- EXERCÍCIO 3: MÚLTIPLA ESCOLHA (#3 Estás) -->
     <div class="exercise-card" id="q3">
-      <div class="question-text">3. Se alguém perguntar sua idade em espanhol, qual palavra significa "ANOS"?</div>
+      <div class="question-text">3. Na pergunta "¿Cómo estás?", o que significa a palavra "estás"?</div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Días</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q3')">Años</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Horas</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q3')">Você está</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Você vai</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Você tem</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 4 (COMPLETAR A FRASE) -->
+    <!-- EXERCÍCIO 4: ÁUDIO SEM TEXTO (#4 Estoy) -->
     <div class="exercise-card" id="q4">
-      <div class="question-text">4. Complete a resposta para "¿Cómo estás?": "Estoy _____." (Estou bem)</div>
+      <div class="question-text">4. Ouça a palavra usada para começar sua resposta e marque o significado:</div>
+      <div class="audio-prompt-row">
+        <button class="audio-play-btn" onclick="playListeningWord('estoy')">🔊 Ouvir palavra</button>
+        <span id="reveal-q4" class="revealed-word"></span>
+      </div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q4')">Bien</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Triste</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Perdido</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q4', 'Estoy', 'reveal-q4')">Quero</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q4', 'Estoy', 'reveal-q4')">Estou</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q4', 'Estoy', 'reveal-q4')">Tenho</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 5 (ESCOLHA DE PALAVRA) -->
+    <!-- EXERCÍCIO 5: LIGUE AS PALAVRAS - BLOCO 1 -->
     <div class="exercise-card" id="q5">
-      <div class="question-text">5. Para descobrir a cidade ou país de origem de uma pessoa, qual palavra significa "ONDE"?</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Español</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Cómo</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q5')">Dónde</button>
+      <div class="question-text">5. Ligue as palavras da resposta e apresentação com suas traduções:</div>
+      <div class="match-columns" id="match-q5">
+        <div class="match-col">
+          <div class="match-col-title">Português</div>
+          <button class="match-btn" data-side="pt" data-pair="0" onclick="handleMatchClick(this, 'q5')">Bem</button>
+          <button class="match-btn" data-side="pt" data-pair="1" onclick="handleMatchClick(this, 'q5')">Ótimo / Genial</button>
+          <button class="match-btn" data-side="pt" data-pair="2" onclick="handleMatchClick(this, 'q5')">Obrigado(a)</button>
+          <button class="match-btn" data-side="pt" data-pair="3" onclick="handleMatchClick(this, 'q5')">Você</button>
+          <button class="match-btn" data-side="pt" data-pair="4" onclick="handleMatchClick(this, 'q5')">Nome</button>
+          <button class="match-btn" data-side="pt" data-pair="5" onclick="handleMatchClick(this, 'q5')">Me chamo</button>
+        </div>
+        <div class="match-col">
+          <div class="match-col-title">Espanhol</div>
+          <button class="match-btn" data-side="es" data-pair="2" data-word="gracias" onclick="handleMatchClick(this, 'q5')">Gracias</button>
+          <button class="match-btn" data-side="es" data-pair="5" data-word="me llamo" onclick="handleMatchClick(this, 'q5')">Me llamo</button>
+          <button class="match-btn" data-side="es" data-pair="0" data-word="bien" onclick="handleMatchClick(this, 'q5')">Bien</button>
+          <button class="match-btn" data-side="es" data-pair="4" data-word="nombre" onclick="handleMatchClick(this, 'q5')">Nombre</button>
+          <button class="match-btn" data-side="es" data-pair="1" data-word="genial" onclick="handleMatchClick(this, 'q5')">Genial</button>
+          <button class="match-btn" data-side="es" data-pair="3" data-word="tú" onclick="handleMatchClick(this, 'q5')">Tú</button>
+        </div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 6 (COMPLETAR A FRASE) -->
+    <!-- EXERCÍCIO 6: COMPLETAR A FRASE (#11 Soy) -->
     <div class="exercise-card" id="q6">
-      <div class="question-text">6. Complete a pergunta sobre ocupação: "¿Dónde _____?" (Onde você trabalha?)</div>
+      <div class="question-text">6. Outra forma simples de dizer quem você é: "¡Hola! _____ María." (Eu sou María)</div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Hablas</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q6')">Trabajas</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Sabes</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q6')">Soy</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Voy</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Doy</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 7 (ESCOLHA DE PALAVRA) -->
+    <!-- EXERCÍCIO 7: ÁUDIO SEM TEXTO (#12 Llamas) -->
     <div class="exercise-card" id="q7">
-      <div class="question-text">7. No fim de uma boa conversa, qual palavra você pede para salvar o "NÚMERO" de telefone?</div>
+      <div class="question-text">7. Ouça a palavra final da pergunta "¿Cómo te _____?" e escolha o sentido:</div>
+      <div class="audio-prompt-row">
+        <button class="audio-play-btn" onclick="playListeningWord('llamas')">🔊 Ouvir palavra</button>
+        <span id="reveal-q7" class="revealed-word"></span>
+      </div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q7')">Número</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q7')">Baño</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q7')">Cuenta</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q7', 'Llamas', 'reveal-q7')">Mora</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q7', 'Llamas', 'reveal-q7')">Trabalha</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q7', 'Llamas', 'reveal-q7')">Chama (se chama)</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 8 (COMPLETAR A FRASE) -->
+    <!-- EXERCÍCIO 8: MÚLTIPLA ESCOLHA (#13 Mucho gusto) -->
     <div class="exercise-card" id="q8">
-      <div class="question-text">8. Complete a despedida ao final do encontro: "Hasta _____." (Até mais)</div>
+      <div class="question-text">8. A pessoa acabou de dizer o nome dela. Qual expressão significa "Muito prazer"?</div>
       <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">Tarde</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q8')">Luego</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">Noche</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">Hasta pronto</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q8')">Mucho gusto</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">De nada</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 9 (MICROFONE) -->
+    <!-- EXERCÍCIO 9: COMPLETAR A FRASE (#14 Encantado) -->
     <div class="exercise-card" id="q9">
-      <div class="question-text">
-        9. Pronúncia 1: Diga a frase "<span id="word-display-q9" class="target-word">¿CUÁL ES TU NOMBRE?</span>" no microfone:
-      </div>
-      <div class="voice-box">
-        <button class="mic-btn" id="mic1-btn" onclick="startVoiceRecognition('cuál es tu nombre', 'mic1-btn', 'status1', 'q9', 'nombre')">🎙️</button>
-        <div id="status1" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      <div class="question-text">9. Complete outra forma educada de responder ao cumprimento: "_____ de conocerte."</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q9')">Cansado</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q9')">Ocupado</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q9')">Encantado</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 10 (MICROFONE) -->
+    <!-- EXERCÍCIO 10: LIGUE AS PALAVRAS - BLOCO 2 -->
     <div class="exercise-card" id="q10">
-      <div class="question-text">
-        10. Pronúncia 2: Diga a frase "<span id="word-display-q10" class="target-word">MUCHO GUSTO</span>" no microfone:
-      </div>
-      <div class="voice-box">
-        <button class="mic-btn" id="mic2-btn" onclick="startVoiceRecognition('mucho gusto', 'mic2-btn', 'status2', 'q10', 'gusto')">🎙️</button>
-        <div id="status2" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      <div class="question-text">10. Ligue as palavras usadas para puxar assunto e fazer amizade:</div>
+      <div class="match-columns" id="match-q10">
+        <div class="match-col">
+          <div class="match-col-title">Português</div>
+          <button class="match-btn" data-side="pt" data-pair="0" onclick="handleMatchClick(this, 'q10')">Com licença</button>
+          <button class="match-btn" data-side="pt" data-pair="1" onclick="handleMatchClick(this, 'q10')">Livre</button>
+          <button class="match-btn" data-side="pt" data-pair="2" onclick="handleMatchClick(this, 'q10')">Por favor</button>
+          <button class="match-btn" data-side="pt" data-pair="3" onclick="handleMatchClick(this, 'q10')">Amigo</button>
+          <button class="match-btn" data-side="pt" data-pair="4" onclick="handleMatchClick(this, 'q10')">Eu gosto</button>
+          <button class="match-btn" data-side="pt" data-pair="5" onclick="handleMatchClick(this, 'q10')">Também</button>
+        </div>
+        <div class="match-col">
+          <div class="match-col-title">Espanhol</div>
+          <button class="match-btn" data-side="es" data-pair="3" data-word="amigo" onclick="handleMatchClick(this, 'q10')">Amigo</button>
+          <button class="match-btn" data-side="es" data-pair="0" data-word="disculpa" onclick="handleMatchClick(this, 'q10')">Disculpa</button>
+          <button class="match-btn" data-side="es" data-pair="4" data-word="me gusta" onclick="handleMatchClick(this, 'q10')">Me gusta</button>
+          <button class="match-btn" data-side="es" data-pair="1" data-word="libre" onclick="handleMatchClick(this, 'q10')">Libre</button>
+          <button class="match-btn" data-side="es" data-pair="5" data-word="también" onclick="handleMatchClick(this, 'q10')">También</button>
+          <button class="match-btn" data-side="es" data-pair="2" data-word="por favor" onclick="handleMatchClick(this, 'q10')">Por favor</button>
+        </div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 11 (MICROFONE) -->
+    <!-- EXERCÍCIO 11: ÁUDIO SEM TEXTO (#21 Bonito) -->
     <div class="exercise-card" id="q11">
-      <div class="question-text">
-        11. Pronúncia 3: Diga a frase "<span id="word-display-q11" class="target-word">¿DE DÓNDE ERES?</span>" no microfone:
+      <div class="question-text">11. Ouça o adjetivo usado para fazer um elogio sincero e escolha a tradução:</div>
+      <div class="audio-prompt-row">
+        <button class="audio-play-btn" onclick="playListeningWord('bonito')">🔊 Ouvir palavra</button>
+        <span id="reveal-q11" class="revealed-word"></span>
       </div>
-      <div class="voice-box">
-        <button class="mic-btn" id="mic3-btn" onclick="startVoiceRecognition('de dónde eres', 'mic3-btn', 'status3', 'q11', 'dónde')">🎙️</button>
-        <div id="status3" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q11', 'Bonito', 'reveal-q11')">Bonito</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q11', 'Bonito', 'reveal-q11')">Caro</button>
+        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q11', 'Bonito', 'reveal-q11')">Antigo</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 12 (MICROFONE) -->
+    <!-- EXERCÍCIO 12: COMPLETAR A FRASE (#22 De nada) -->
     <div class="exercise-card" id="q12">
-      <div class="question-text">
-        12. Pronúncia 4: Diga a frase "<span id="word-display-q12" class="target-word">¿CUÁL ES TU NÚMERO?</span>" no microfone:
-      </div>
-      <div class="voice-box">
-        <button class="mic-btn" id="mic4-btn" onclick="startVoiceRecognition('cuál es tu número', 'mic4-btn', 'status4', 'q12', 'número')">🎙️</button>
-        <div id="status4" style="font-size:13px; font-weight:800; color:#6c757d;">Toque para falar</div>
+      <div class="question-text">12. Quando alguém agradecer seu elogio dizendo "Muchas gracias", responda: "_____."</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q12')">Mucho gusto</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q12')">De nada</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q12')">Cómo estás</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 13: TRADUÇÃO DE IMAGEM 1 -->
+    <!-- EXERCÍCIO 13: MÚLTIPLA ESCOLHA (#23 Hasta pronto) -->
     <div class="exercise-card" id="q13">
-      <div class="question-text">13. Tradução de Imagem 1: Toque na imagem e diga o nome em espanhol:</div>
-      <div class="image-speak-box" id="img-box-q13"></div>
-    </div>
-
-    <!-- EXERCÍCIO 14: TRADUÇÃO DE IMAGEM 2 -->
-    <div class="exercise-card" id="q14">
-      <div class="question-text">14. Tradução de Imagem 2: Toque na imagem e diga o nome em espanhol:</div>
-      <div class="image-speak-box" id="img-box-q14"></div>
-    </div>
-
-    <!-- EXERCÍCIO 15: TRADUÇÃO DE IMAGEM 3 -->
-    <div class="exercise-card" id="q15">
-      <div class="question-text">15. Tradução de Imagem 3: Toque na imagem e diga o nome em espanhol:</div>
-      <div class="image-speak-box" id="img-box-q15"></div>
-    </div>
-
-    <!-- EXERCÍCIO 16: TRADUÇÃO DE IMAGEM 4 -->
-    <div class="exercise-card" id="q16">
-      <div class="question-text">16. Tradução de Imagem 4: Toque na imagem e diga o nome em espanhol:</div>
-      <div class="image-speak-box" id="img-box-q16"></div>
-    </div>
-
-    <div class="video-intro">
-      🎬 Agora você já conhece palavras suficientes para praticar algumas frases deste vídeo:
-    </div>
-
-    <!-- VÍDEO -->
-    <div class="video-card">
-      <div class="video-container">
-        <iframe src="https://www.youtube.com/embed/J9jqfocCaf0?si=fxQm0Kxt0EBbHy6A&amp;start=82" allowfullscreen></iframe>
+      <div class="question-text">13. Na hora de encerrar a conversa, o que significa "Hasta pronto"?</div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q13')">Até breve</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">Bom dia</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">Com licença</button>
       </div>
-      <div class="video-info">
-        Conhecendo uma pessoa - Conversação | Canal: Mr. Spanish Channel - Señor Español
+    </div>
+
+    <!-- EXERCÍCIO 14: PLAYLIST DE FALA COM BOTÃO MANUAL - PARTE 1 -->
+    <div class="exercise-card" id="q14">
+      <div class="question-text">14. Prática de Fala (1/2): Toque no microfone abaixo de cada palavra para pronunciar:</div>
+      <div class="auto-speech-box" id="deck-box-q14">
+        <button class="start-speech-btn" onclick="startSpeechDeck('q14', ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'])">🎙️ Iniciar Prática de Fala</button>
+      </div>
+    </div>
+
+    <!-- EXERCÍCIO 15: PLAYLIST DE FALA COM BOTÃO MANUAL - PARTE 2 -->
+    <div class="exercise-card" id="q15">
+      <div class="question-text">15. Prática de Fala (2/2): Complete o treino de pronúncia do diálogo:</div>
+      <div class="auto-speech-box" id="deck-box-q15">
+        <button class="start-speech-btn" onclick="startSpeechDeck('q15', ['Bien', 'Nombre', 'Por favor', 'Hasta pronto'])">🎙️ Iniciar Prática de Fala</button>
       </div>
     </div>
 
@@ -285,18 +332,18 @@
   <div id="victory-modal" class="modal-overlay">
     <div class="modal-box">
       <div style="font-size: 60px;">🏆</div>
-      <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Excelente Trabalho!</div>
+      <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Sensacional!</div>
       <p style="font-size: 14px; font-weight: 700; color: #6c757d; margin-top: 8px;">
-        Você completou todos os 16 exercícios e treinou sua pronúncia e vocabulário visual!
+        Você concluiu os 15 exercícios e dominou a conversa inicial!
       </p>
       <div style="margin-top: 15px; background: #eef4f8; padding: 12px; border-radius: 12px; font-weight: 800; color: #ffb703;">
-        🌟 +120 XP Ganhos | Progresso Salvo
+        🌟 +150 XP Ganhos | Progresso Atualizado
       </div>
       <button class="btn-continue" onclick="voltarParaAulasBasicas()">Voltar para a Trilha</button>
     </div>
   </div>
 
-  <!-- MODAL DE CONFIRMAÇÃO DE SAÍDA (SALVAR PROGRESSO) -->
+  <!-- MODAL DE CONFIRMAÇÃO DE SAÍDA -->
   <div id="exit-modal" class="modal-overlay">
     <div class="modal-box">
       <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
@@ -311,7 +358,6 @@
 
   <script>
     const URL_AULAS_BASICAS = 'https://weyload.github.io/Aulas-basicas/';
-    const BASE_IMG_URL = 'https://weyload.github.io/Aula1/';
 
     function voltarParaAulasBasicas() {
       if (document.referrer && document.referrer.includes('weyload.github.io') && document.referrer !== window.location.href) {
@@ -321,10 +367,9 @@
       }
     }
 
-    // 1. MÁQUINA DE ESCREVER
-    const textToType = "¡Hola! Nossa primeira aula!! Vamos aprender como conhecer pessoas e falar palavras pelas imagens.";
+    // 1. MÁQUINA DE ESCREVER DA CAPIVARA
+    const textToType = "¡Hola! Vamos aprender passo a passo as palavras essenciais para iniciar uma conversa e fazer amigos em espanhol. ¡Vamos!";
     let typeIndex = 0;
-
     function typeWriter() {
       if (typeIndex < textToType.length) {
         document.getElementById("typed-text").innerHTML += textToType.charAt(typeIndex);
@@ -332,19 +377,29 @@
         setTimeout(typeWriter, 30);
       }
     }
+    window.addEventListener('load', typeWriter);
 
-    // 2. CONTROLE DOS 16 EXERCÍCIOS
-    const totalQuestions = 16;
+    // 2. CONTROLE GERAL DOS 15 EXERCÍCIOS
+    const totalQuestions = 15;
     const completedQuestions = new Set();
-    const questionAttempts = {};
 
-    function updateProgressUI() {
+    function markQuestionDone(qId) {
+      if (completedQuestions.has(qId)) return;
+      completedQuestions.add(qId);
       const counter = document.getElementById('progress-counter');
       if (counter) {
         counter.textContent = `${completedQuestions.size} / ${totalQuestions} concluidos`;
       }
+      if (completedQuestions.size >= totalQuestions) {
+        saveUserProgress(150);
+        setTimeout(() => {
+          playVictorySound();
+          document.getElementById('victory-modal').classList.add('show');
+        }, 500);
+      }
     }
 
+    // SOM DE ACERTO EM 2 NOTAS ASCENDENTES (EXERCÍCIOS 1 A 13)
     function playCorrectSound() {
       try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -366,9 +421,9 @@
       } catch (e) {}
     }
 
+    // 3. MÚLTIPLA ESCOLHA E COMPLETAR FRASE
     function checkAnswer(btn, isCorrect, qId) {
       if (completedQuestions.has(qId)) return;
-
       const card = document.getElementById(qId);
       const buttons = card.querySelectorAll('.opt-btn');
 
@@ -376,170 +431,167 @@
         btn.classList.add('correct');
         buttons.forEach(b => b.disabled = true);
         playCorrectSound();
-        completedQuestions.add(qId);
-        updateProgressUI();
-        checkCompletion();
+        markQuestionDone(qId);
       } else {
         btn.classList.add('wrong');
         btn.disabled = true;
       }
     }
 
-    // 3. BANCO COMPLETO DAS 45 IMAGENS DO GITHUB (https://weyload.github.io/Aula1/)
-    const bancoImagens45 = [
-      { arquivo: "banco.jpg", pt: "Banco", es: ["banco"] },
-      { arquivo: "cadeira.jpg", pt: "Cadeira", es: ["silla", "asiento"] },
-      { arquivo: "caderno.jpg", pt: "Caderno", es: ["cuaderno", "libreta"] },
-      { arquivo: "cafeteria.jpg", pt: "Cafeteria", es: ["cafeteria", "cafe"] },
-      { arquivo: "caixa_eletronico.jpg", pt: "Caixa eletrônico", es: ["cajero automatico", "cajero"] },
-      { arquivo: "calçada.jpg", pt: "Calçada", es: ["acera", "vereda", "banqueta"] },
-      { arquivo: "carregador.jpg", pt: "Carregador", es: ["cargador"] },
-      { arquivo: "carteira_dinheiro.jpg", pt: "Carteira", es: ["cartera", "billetera"] },
-      { arquivo: "celular.jpg", pt: "Celular", es: ["celular", "movil", "telefono"] },
-      { arquivo: "chaves.jpg", pt: "Chaves", es: ["llaves", "llave"] },
-      { arquivo: "ciclovia.jpg", pt: "Ciclovia", es: ["ciclovia", "carril bici"] },
-      { arquivo: "colher.jpg", pt: "Colher", es: ["cuchara"] },
-      { arquivo: "copo.jpg", pt: "Copo", es: ["vaso"] },
-      { arquivo: "correios.jpg", pt: "Correios", es: ["correos", "correo"] },
-      { arquivo: "escola.jpg", pt: "Escola", es: ["escuela", "colegio"] },
-      { arquivo: "escova_dente.jpg", pt: "Escova de dente", es: ["cepillo de dientes", "cepillo"] },
-      { arquivo: "esquina.jpg", pt: "Esquina", es: ["esquina"] },
-      { arquivo: "farmacia.jpg", pt: "Farmácia", es: ["farmacia"] },
-      { arquivo: "fone_de_ouvido.jpg", pt: "Fone de ouvido", es: ["audifonos", "auriculares", "cascos"] },
-      { arquivo: "garfo.jpg", pt: "Garfo", es: ["tenedor"] },
-      { arquivo: "garrafa.jpg", pt: "Garrafa", es: ["botella"] },
-      { arquivo: "guarda_chuva.jpg", pt: "Guarda-chuva", es: ["paraguas"] },
-      { arquivo: "hospital.jpg", pt: "Hospital", es: ["hospital"] },
-      { arquivo: "livro.jpg", pt: "Livro", es: ["libro"] },
-      { arquivo: "lixeira.jpg", pt: "Lixeira", es: ["basurero", "papelera", "cubo de basura"] },
-      { arquivo: "mesa.jpg", pt: "Mesa", es: ["mesa"] },
-      { arquivo: "metro.jpg", pt: "Metrô", es: ["metro", "subterraneo", "subte"] },
-      { arquivo: "mochila.jpg", pt: "Mochila", es: ["mochila"] },
-      { arquivo: "museo.jpg", pt: "Museu", es: ["museo"] },
-      { arquivo: "oculos.jpg", pt: "Óculos", es: ["gafas", "lentes", "anteojos"] },
-      { arquivo: "padaria.jpg", pt: "Padaria", es: ["panaderia"] },
-      { arquivo: "panela.jpg", pt: "Panela", es: ["olla", "cazuela", "sarten"] },
-      { arquivo: "policia.jpg", pt: "Polícia", es: ["policia", "comisaria"] },
-      { arquivo: "ponto_onibus.jpg", pt: "Ponto de ônibus", es: ["parada de autobus", "parada de bus", "parada"] },
-      { arquivo: "poste_luz.jpg", pt: "Poste de luz", es: ["poste de luz", "farola", "poste"] },
-      { arquivo: "praça.jpg", pt: "Praça", es: ["plaza"] },
-      { arquivo: "prato.jpg", pt: "Prato", es: ["plato"] },
-      { arquivo: "quarteirão.jpg", pt: "Quarteirão", es: ["cuadra", "manzana"] },
-      { arquivo: "relogio_pulso.jpg", pt: "Relógio de pulso", es: ["reloj", "reloj de pulsera"] },
-      { arquivo: "restaurante.jpg", pt: "Restaurante", es: ["restaurante"] },
-      { arquivo: "rotatória.jpg", pt: "Rotatória", es: ["rotonda", "glorieta"] },
-      { arquivo: "rua.jpg", pt: "Rua", es: ["calle"] },
-      { arquivo: "sabonete.jpg", pt: "Sabonete", es: ["jabon"] },
-      { arquivo: "semaforo.jpg", pt: "Semáforo", es: ["semaforo"] },
-      { arquivo: "travesseiro.jpg", pt: "Travesseiro", es: ["almohada"] }
-    ];
+    // 4. ESCUTAR SEM VER A PALAVRA + REVELAR AO RESPONDER
+    function playListeningWord(word) {
+      hablarPronunciacionCorrecta(word);
+    }
 
-    const imageCardState = {
-      q13: { imgIndex: 1, attempts: 0 },  // cadeira.jpg
-      q14: { imgIndex: 23, attempts: 0 }, // livro.jpg
-      q15: { imgIndex: 8, attempts: 0 },  // celular.jpg
-      q16: { imgIndex: 25, attempts: 0 }  // mesa.jpg
+    function checkListeningAnswer(btn, isCorrect, qId, spanishWord, revealId) {
+      const revealEl = document.getElementById(revealId);
+      if (revealEl) {
+        revealEl.textContent = spanishWord.toUpperCase();
+        revealEl.classList.add('visible');
+      }
+
+      if (completedQuestions.has(qId)) return;
+      const card = document.getElementById(qId);
+      const buttons = card.querySelectorAll('.opt-btn');
+
+      if (isCorrect) {
+        btn.classList.add('correct');
+        buttons.forEach(b => b.disabled = true);
+        playCorrectSound();
+        markQuestionDone(qId);
+      } else {
+        btn.classList.add('wrong');
+        btn.disabled = true;
+      }
+    }
+
+    // 5. LIGUE AS PALAVRAS (6 PARES PORTUGUÊS <-> ESPANHOL)
+    const matchState = {};
+
+    function handleMatchClick(btn, qId) {
+      if (btn.classList.contains('matched') || btn.classList.contains('flash-orange')) return;
+
+      if (!matchState[qId]) {
+        matchState[qId] = { selected: null, matchedCount: 0 };
+      }
+      const state = matchState[qId];
+
+      if (btn.dataset.side === 'es' && btn.dataset.word) {
+        hablarPronunciacionCorrecta(btn.dataset.word);
+      }
+
+      if (!state.selected) {
+        state.selected = btn;
+        btn.classList.add('selected');
+        return;
+      }
+
+      if (state.selected === btn) {
+        btn.classList.remove('selected');
+        state.selected = null;
+        return;
+      }
+
+      if (state.selected.dataset.side === btn.dataset.side) {
+        state.selected.classList.remove('selected');
+        state.selected = btn;
+        btn.classList.add('selected');
+        return;
+      }
+
+      const firstBtn = state.selected;
+      state.selected = null;
+
+      if (firstBtn.dataset.pair === btn.dataset.pair) {
+        firstBtn.classList.remove('selected');
+        firstBtn.classList.add('matched');
+        btn.classList.add('matched');
+        firstBtn.disabled = true;
+        btn.disabled = true;
+        state.matchedCount++;
+        playCorrectSound();
+
+        if (state.matchedCount >= 6) {
+          markQuestionDone(qId);
+        }
+      } else {
+        firstBtn.classList.remove('selected');
+        firstBtn.classList.add('flash-orange');
+        btn.classList.add('flash-orange');
+        setTimeout(() => {
+          firstBtn.classList.remove('flash-orange');
+          btn.classList.remove('flash-orange');
+        }, 620);
+      }
+    }
+
+    // 6. PLAYLIST DE FALA COM BOTÃO MANUAL E PONTE APP INVENTOR DA AULA 1
+    const deckInitialWords = {
+      q14: ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'],
+      q15: ['Bien', 'Nombre', 'Por favor', 'Hasta pronto']
     };
 
-    function renderImageCard(qId) {
-      const box = document.getElementById(`img-box-${qId}`);
-      if (!box) return;
-      const state = imageCardState[qId];
-      const item = bancoImagens45[state.imgIndex];
-      const imgSrc = encodeURI(BASE_IMG_URL + item.arquivo);
-      const fallbackSrc = encodeURI(item.arquivo);
+    let activeDeck = null;
+    let deckTimer = null;
 
+    function startSpeechDeck(qId, wordList) {
+      if (completedQuestions.has(qId)) return;
+
+      if (deckTimer) {
+        clearTimeout(deckTimer);
+        deckTimer = null;
+      }
+
+      if (activeDeck && activeDeck.qId !== qId && !completedQuestions.has(activeDeck.qId)) {
+        const prevQId = activeDeck.qId;
+        const prevBox = document.getElementById(`deck-box-${prevQId}`);
+        const prevWords = JSON.stringify(deckInitialWords[prevQId]).replace(/"/g, "'");
+        if (prevBox) {
+          prevBox.className = 'auto-speech-box';
+          prevBox.innerHTML = `<button class="start-speech-btn" onclick="startSpeechDeck('${prevQId}', ${prevWords})">🎙️ Iniciar Prática de Fala</button>`;
+        }
+      }
+
+      activeDeck = {
+        qId: qId,
+        queue: wordList.map(w => ({ word: w, isRetry: false })),
+        index: 0,
+        attemptsOnCurrent: 0,
+        hits: 0,
+        misses: 0,
+        isTransitioning: false
+      };
+
+      renderSpeechCard();
+    }
+
+    function renderSpeechCard() {
+      if (!activeDeck) return;
+      const box = document.getElementById(`deck-box-${activeDeck.qId}`);
+      const currentItem = activeDeck.queue[activeDeck.index];
+      const retryBadge = currentItem.isRetry ? ' (Repescagem)' : '';
+
+      box.className = 'auto-speech-box';
       box.innerHTML = `
-        <div class="clickable-img-wrap" id="img-wrap-${qId}" onclick="iniciarFalaImagem('${qId}')">
-          <img src="${imgSrc}" onerror="this.onerror=null; this.src='${fallbackSrc}';" alt="${item.pt}">
-          <div class="img-mic-badge">🎙️</div>
-        </div>
-        <div class="img-hint-label">Dica em português: <strong>${item.pt}</strong></div>
-        <div class="img-status-text" id="img-status-${qId}">Toque na imagem para falar em espanhol</div>
-        <button class="swap-img-btn" onclick="trocarImagemCard('${qId}')">🔄 Trocar imagem (${state.imgIndex + 1}/45)</button>
+        <div class="speech-card-counter">Palavra ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
+        <div class="speech-target-big">${currentItem.word.toUpperCase()}</div>
+        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="triggerDeckListen()">🎙️</button>
+        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Toque no microfone 🎙️ e fale a palavra</div>
       `;
     }
 
-    function trocarImagemCard(qId) {
-      const state = imageCardState[qId];
-      state.imgIndex = (state.imgIndex + 4) % bancoImagens45.length;
-      state.attempts = 0;
-      renderImageCard(qId);
-    }
+    function triggerDeckListen() {
+      if (!activeDeck || activeDeck.isTransitioning) return;
+      const currentItem = activeDeck.queue[activeDeck.index];
+      if (!currentItem) return;
 
-    // 4. RECONHECIMENTO DE VOZ (EXATA PONTE APP INVENTOR / KODULAR QUE FUNCIONA NA AULA 1)
-    let palavraEsperadaAtual = '';
-    let palavraAlternativaAtual = '';
-    let btnIdAtual = '';
-    let statusIdAtual = '';
-    let qIdAtual = '';
-    let imagemQIdAtual = '';
-
-    function startVoiceRecognition(expectedText, btnId, statusId, qId, altWord = '') {
-      if (completedQuestions.has(qId)) return;
-
-      if (questionAttempts[qId] && questionAttempts[qId].switched) {
-        palavraEsperadaAtual = questionAttempts[qId].currentWord;
-      } else {
-        palavraEsperadaAtual = expectedText;
-        palavraAlternativaAtual = altWord;
-      }
-
-      btnIdAtual = btnId;
-      statusIdAtual = statusId;
-      qIdAtual = qId;
-      imagemQIdAtual = '';
+      const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
+      const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
 
       if (window.AppInventor) {
-        document.getElementById(statusId).innerHTML = "🎙️ Ouvindo... Fale agora!";
-        document.getElementById(statusId).style.color = "#ffb703";
-        window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
-        return;
-      }
-
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        processarResultadoVoz(expectedText);
-        return;
-      }
-
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'es-ES';
-
-      const micBtn = document.getElementById(btnId);
-      micBtn.classList.add('listening');
-      document.getElementById(statusId).innerHTML = `Ouvindo... Diga "${palavraEsperadaAtual.toUpperCase()}"`;
-
-      recognition.start();
-
-      recognition.onresult = function(event) {
-        micBtn.classList.remove('listening');
-        processarResultadoVoz(event.results[0][0].transcript);
-      };
-
-      recognition.onerror = function() {
-        micBtn.classList.remove('listening');
-        processarResultadoVoz(""); 
-      };
-    }
-
-    function iniciarFalaImagem(qId) {
-      const state = imageCardState[qId];
-      const item = bancoImagens45[state.imgIndex];
-
-      qIdAtual = '';
-      imagemQIdAtual = qId;
-
-      const wrap = document.getElementById(`img-wrap-${qId}`);
-      const statusEl = document.getElementById(`img-status-${qId}`);
-
-      if (window.AppInventor) {
-        if (wrap) {
-          wrap.classList.remove('wrong');
-          wrap.classList.add('listening');
-        }
+        if (micBtn) micBtn.classList.add('listening');
         if (statusEl) {
-          statusEl.innerHTML = `🎙️ Ouvindo... Fale "${item.pt}" em espanhol!`;
+          statusEl.innerHTML = "🎙️ Ouvindo... Fale agora!";
           statusEl.style.color = "#ffb703";
         }
         window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
@@ -547,7 +599,7 @@
       }
 
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        processarResultadoImagem(item.es[0]);
+        processarResultadoVoz(currentItem.word);
         return;
       }
 
@@ -555,154 +607,125 @@
       const recognition = new SpeechRecognition();
       recognition.lang = 'es-ES';
 
-      if (wrap) {
-        wrap.classList.remove('wrong');
-        wrap.classList.add('listening');
-      }
+      if (micBtn) micBtn.classList.add('listening');
       if (statusEl) {
-        statusEl.innerHTML = `🎙️ Ouvindo... Fale "${item.pt}" em espanhol!`;
-        statusEl.style.color = "#e63946";
+        statusEl.innerHTML = `Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
+        statusEl.style.color = '#0b2545';
       }
 
       recognition.start();
 
       recognition.onresult = function(event) {
-        if (wrap) wrap.classList.remove('listening');
-        processarResultadoImagem(event.results[0][0].transcript);
+        if (micBtn) micBtn.classList.remove('listening');
+        processarResultadoVoz(event.results[0][0].transcript);
       };
 
       recognition.onerror = function() {
-        if (wrap) wrap.classList.remove('listening');
-        processarResultadoImagem("");
+        if (micBtn) micBtn.classList.remove('listening');
+        processarResultadoVoz("");
       };
     }
 
     function receberTextoVoz(textoOuvido) {
-      if (imagemQIdAtual) {
-        const wrap = document.getElementById(`img-wrap-${imagemQIdAtual}`);
-        if (wrap) wrap.classList.remove('listening');
-        processarResultadoImagem(textoOuvido);
-      } else {
-        processarResultadoVoz(textoOuvido);
-      }
+      if (!activeDeck) return;
+      const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
+      if (micBtn) micBtn.classList.remove('listening');
+      processarResultadoVoz(textoOuvido);
     }
 
     function processarResultadoVoz(transcript) {
-      if (!qIdAtual || completedQuestions.has(qIdAtual)) return;
+      if (!activeDeck || activeDeck.isTransitioning) return;
+      const deck = activeDeck;
+      const currentItem = deck.queue[deck.index];
+      if (!currentItem) return;
 
-      const statusText = document.getElementById(statusIdAtual);
-      const micBtn = document.getElementById(btnIdAtual);
+      const box = document.getElementById(`deck-box-${deck.qId}`);
+      const statusEl = document.getElementById(`deck-status-${deck.qId}`);
+      const micBtn = document.getElementById(`deck-mic-${deck.qId}`);
 
-      let normTarget = palavraEsperadaAtual.toLowerCase().trim()
+      let normTarget = currentItem.word.toLowerCase().trim()
         .replace(/[¿?¡!.,]/g, '')
         .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]));
-        
+
       let normTranscript = transcript.toLowerCase().trim()
         .replace(/[¿?¡!.,]/g, '')
         .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]))
         .replace(/\bestou\b/g, "estoy").replace(/\bola\b/g, "hola")
-        .replace(/\bdise\b/g, "dice").replace(/\bgrasias\b/g, "gracias");
+        .replace(/\basta\b/g, "hasta").replace(/\bdise\b/g, "dice")
+        .replace(/\bgrasias\b/g, "gracias").replace(/\badios\b/g, "adios");
 
-      if (transcript !== "" && (normTranscript.includes(normTarget) || normTranscript.includes(normTarget.replace('ñ','n')))) {
-        statusText.innerHTML = `✅ Muito bem! ("${transcript}")`;
-        statusText.style.color = "#2ec4b6";
+      if (transcript !== "" && (normTranscript.includes(normTarget) || normTranscript.includes(normTarget.replace('ñ', 'n')))) {
+        deck.hits++;
+        deck.isTransitioning = true;
         if (micBtn) micBtn.disabled = true;
-        playCorrectSound();
-        
-        completedQuestions.add(qIdAtual);
-        updateProgressUI();
-        checkCompletion();
-      } else {
-        if (!questionAttempts[qIdAtual]) {
-          questionAttempts[qIdAtual] = { count: 0, switched: false, currentWord: palavraEsperadaAtual };
-        }
-        questionAttempts[qIdAtual].count++;
 
-        if (questionAttempts[qIdAtual].count >= 2 && palavraAlternativaAtual && !questionAttempts[qIdAtual].switched) {
-          questionAttempts[qIdAtual].switched = true;
-          questionAttempts[qIdAtual].currentWord = palavraAlternativaAtual;
-          palavraEsperadaAtual = palavraAlternativaAtual;
-
-          const wordElement = document.getElementById(`word-display-${qIdAtual}`);
-          if (wordElement) {
-            wordElement.innerHTML = palavraAlternativaAtual.toUpperCase() + " 🔄";
-            wordElement.classList.add("alt-active");
-          }
-
-          statusText.innerHTML = `Facilitamos para você! Diga "${palavraAlternativaAtual.toUpperCase()}" 🔊`;
-          statusText.style.color = "#ffb703";
-        } else {
-          statusText.innerHTML = transcript ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia!` : "Não ouvi bem. 🔊 Ouça a pronúncia!";
-          statusText.style.color = "#e63946";
-        }
-
-        hablarPronunciacionCorrecta(palavraEsperadaAtual);
-      }
-    }
-
-    function normalizarTextoImagem(texto) {
-      return texto.toLowerCase().trim()
-        .replace(/[¿?¡!.,]/g, '')
-        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]))
-        .replace(/ñ/g, 'n')
-        .replace(/^(el|la|los|las|un|una|unos|unas)\s+/i, '')
-        .trim();
-    }
-
-    function processarResultadoImagem(transcript) {
-      if (!imagemQIdAtual) return;
-      const qId = imagemQIdAtual;
-      const state = imageCardState[qId];
-      const item = bancoImagens45[state.imgIndex];
-      const wrap = document.getElementById(`img-wrap-${qId}`);
-      const statusEl = document.getElementById(`img-status-${qId}`);
-
-      const falado = normalizarTextoImagem(transcript);
-      const acertou = falado !== "" && item.es.some(alt => {
-        const alvo = normalizarTextoImagem(alt);
-        return falado.includes(alvo) || (alvo.includes(falado) && falado.length >= 3);
-      });
-
-      if (acertou) {
-        if (wrap) {
-          wrap.classList.remove('listening', 'wrong');
-          wrap.classList.add('correct');
-        }
+        box.className = 'auto-speech-box state-green';
         if (statusEl) {
-          statusEl.innerHTML = `✅ ¡Correcto! "${item.es[0].toUpperCase()}" ("${transcript}")`;
+          statusEl.innerHTML = `✅ Muito bem! ("${transcript}")`;
           statusEl.style.color = '#1b7f75';
         }
-        playCorrectSound();
-
-        if (!completedQuestions.has(qId)) {
-          completedQuestions.add(qId);
-          updateProgressUI();
-          checkCompletion();
-        }
+        deckTimer = setTimeout(() => advanceSpeechDeck(), 1200);
       } else {
-        state.attempts++;
-        if (wrap) {
-          wrap.classList.remove('listening');
-          wrap.classList.add('wrong');
-        }
+        deck.attemptsOnCurrent++;
 
-        if (state.attempts >= 2) {
-          if (statusEl) {
-            statusEl.innerHTML = `🔊 Resposta: <strong>${item.es[0].toUpperCase()}</strong>. Toque na imagem para repetir!`;
-            statusEl.style.color = '#b57c00';
-          }
-        } else {
+        if (deck.attemptsOnCurrent === 1) {
+          box.className = 'auto-speech-box state-warn';
           if (statusEl) {
             statusEl.innerHTML = transcript
-              ? `Ouvi "${transcript}". 🔊 Ouça e toque na imagem para repetir!`
-              : `Não ouvi bem. 🔊 Ouça e toque na imagem para repetir!`;
-            statusEl.style.color = '#e63946';
+              ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`
+              : `Não ouvi bem. 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`;
+            statusEl.style.color = '#b57c00';
           }
+          hablarPronunciacionCorrecta(currentItem.word);
+        } else {
+          deck.isTransitioning = true;
+          if (micBtn) micBtn.disabled = true;
+          box.className = 'auto-speech-box state-error';
+
+          if (!currentItem.isRetry) {
+            deck.queue.push({ word: currentItem.word, isRetry: true });
+            if (statusEl) {
+              statusEl.innerHTML = `⏭️ Pulando... "${currentItem.word.toUpperCase()}" voltará na repescagem no final!`;
+              statusEl.style.color = '#c1121f';
+            }
+          } else {
+            deck.misses++;
+            if (statusEl) {
+              statusEl.innerHTML = `❌ Não foi dessa vez. Seguindo...`;
+              statusEl.style.color = '#c1121f';
+            }
+          }
+          deckTimer = setTimeout(() => advanceSpeechDeck(), 1500);
         }
-        hablarPronunciacionCorrecta(item.es[0]);
       }
     }
 
+    function advanceSpeechDeck() {
+      if (!activeDeck) return;
+      activeDeck.index++;
+      activeDeck.attemptsOnCurrent = 0;
+      activeDeck.isTransitioning = false;
+
+      if (activeDeck.index < activeDeck.queue.length) {
+        renderSpeechCard();
+      } else {
+        const finishedDeck = activeDeck;
+        activeDeck = null;
+
+        const box = document.getElementById(`deck-box-${finishedDeck.qId}`);
+        box.className = 'auto-speech-box state-green';
+        box.innerHTML = `
+          <div class="speech-summary">
+            🏁 Prática de fala concluída!<br>
+            <span style="color:#1b7f75;">✅ Acertos: ${finishedDeck.hits}</span> &nbsp;|&nbsp;
+            <span style="color:#e63946;">❌ Erros: ${finishedDeck.misses}</span>
+          </div>
+        `;
+        markQuestionDone(finishedDeck.qId);
+      }
+    }
+
+    // 7. SÍNTESE DE VOZ
     function hablarPronunciacionCorrecta(texto) {
       if (window.AppInventor) {
         window.AppInventor.setWebViewString("Falar_" + texto);
@@ -714,7 +737,7 @@
       }
     }
 
-    // 5. CONTROLES DE SAÍDA E SALVAMENTO DE XP
+    // 8. AVISO DE SAÍDA E SALVAR XP
     function confirmExit() {
       if (completedQuestions.size < totalQuestions) {
         document.getElementById('exit-modal').classList.add('show');
@@ -728,27 +751,15 @@
     }
 
     function exitLesson() {
-      if (completedQuestions.size > 0) {
-        saveUserProgress(completedQuestions.size * 10);
-      }
+      if (deckTimer) clearTimeout(deckTimer);
+      if (completedQuestions.size > 0) saveUserProgress(completedQuestions.size * 10);
       voltarParaAulasBasicas();
-    }
-
-    function checkCompletion() {
-      if (completedQuestions.size >= totalQuestions) {
-        saveUserProgress(120);
-        setTimeout(() => {
-          playVictorySound();
-          document.getElementById('victory-modal').classList.add('show');
-        }, 500);
-      }
     }
 
     function saveUserProgress(xpEarned) {
       let currentXP = parseInt(localStorage.getItem('faleandgo_xp') || '0');
       let currentStreak = parseInt(localStorage.getItem('faleandgo_streak') || '1');
-      currentXP += xpEarned;
-      localStorage.setItem('faleandgo_xp', currentXP);
+      localStorage.setItem('faleandgo_xp', currentXP + xpEarned);
       localStorage.setItem('faleandgo_streak', currentStreak);
     }
 
@@ -757,26 +768,16 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContext();
         const notes = [261.63, 329.63, 392.00, 523.25];
-        
         notes.forEach((freq, index) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.value = freq;
+          const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.type = 'triangle'; osc.frequency.value = freq;
           gain.gain.setValueAtTime(0.3, ctx.currentTime + index * 0.12);
           gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + index * 0.12 + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + index * 0.12);
-          osc.stop(ctx.currentTime + index * 0.12 + 0.4);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + index * 0.12); osc.stop(ctx.currentTime + index * 0.12 + 0.4);
         });
       } catch (e) {}
     }
-
-    window.addEventListener('load', () => {
-      typeWriter();
-      ['q13', 'q14', 'q15', 'q16'].forEach(renderImageCard);
-    });
   </script>
 </body>
 </html>
