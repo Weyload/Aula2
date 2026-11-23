@@ -396,7 +396,12 @@
     }
 
     // Ponte chamada pelo Kodular quando o SpeechRecognizer retorna texto
-    function receberTextoVoz(textoOuvido) {
+   function receberTextoVoz(textoOuvido) {
+      const statusEl = activeDeck ? document.getElementById(`deck-status-${activeDeck.qId}`) : null;
+      if (statusEl) {
+        statusEl.style.color = '#ffb703';
+        statusEl.textContent = `📥 Kodular enviou: [${textoOuvido}]`;
+      }
       if (activeDeck && activeDeck.awaitingSpeech) {
         handleDeckResult(textoOuvido, activeDeck.sessionId);
       }
