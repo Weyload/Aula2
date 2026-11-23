@@ -396,14 +396,15 @@
     }
 
     // Ponte chamada pelo Kodular quando o SpeechRecognizer retorna texto
-   function receberTextoVoz(textoOuvido) {
-      const statusEl = activeDeck ? document.getElementById(`deck-status-${activeDeck.qId}`) : null;
-      if (statusEl) {
-        statusEl.style.color = '#ffb703';
-        statusEl.textContent = `📥 Kodular enviou: [${textoOuvido}]`;
-      }
-      if (activeDeck && activeDeck.awaitingSpeech) {
-        handleDeckResult(textoOuvido, activeDeck.sessionId);
+    function receberTextoVoz(textoOuvido) {
+      if (!activeDeck) return;
+      const limpo = (textoOuvido || '').trim();
+
+      // Ignora resultados parciais vazios que o Android dispara antes de concluir a fala
+      if (limpo === '') return;
+
+      if (activeDeck.awaitingSpeech) {
+        handleDeckResult(limpo, activeDeck.sessionId);
       }
     }
 
@@ -420,8 +421,12 @@
         .replace(/\bcafeteria\b/g, 'cafeteria');
     }
 
-    function handleDeckResult(transcript, sessionId) {
+   function handleDeckResult(transcript, sessionId) {
       if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== sessionId) return;
+
+      const spokenNorm = normalizarTextoDeck(transcript);
+      if (spokenNorm === '') return;
+
       activeDeck.awaitingSpeech = false;
 
       const deckRef = activeDeck;
@@ -432,18 +437,12 @@
       if (micBtn) micBtn.classList.remove('listening');
 
       const targetNorm = normalizarTextoDeck(currentItem.es);
-      const spokenNorm = normalizarTextoDeck(transcript);
 
-      const acertou = spokenNorm !== '' && (
+      const acertou =
         spokenNorm.includes(targetNorm) ||
-        (targetNorm.includes(spokenNorm) && spokenNorm.length >= 4)
-      );
+        (targetNorm.includes(spokenNorm) && spokenNorm.length >= 4);
 
       if (acertou) {
-        if (feedbackDelayTimer) {
-          clearTimeout(feedbackDelayTimer);
-          feedbackDelayTimer = null;
-        }
         deckRef.hits++;
         box.classList.remove('miss');
         box.classList.add('hit');
@@ -454,43 +453,26 @@
         playCorrectTone();
         deckTimer = setTimeout(() => advanceDeckCard(), 1600);
       } else {
-        // Mostra "⏳ Aguarde..." em cinza antes de confirmar erro, evitando flash vermelho prematuro
-        if (statusEl) {
-          statusEl.style.color = '#6c757d';
-          statusEl.textContent = '⏳ Aguarde...';
-        }
+        deckRef.attemptsOnCurrent++;
+        box.classList.add('miss');
 
-        if (feedbackDelayTimer) clearTimeout(feedbackDelayTimer);
-        feedbackDelayTimer = setTimeout(() => {
-          if (!activeDeck || activeDeck.sessionId !== sessionId) return;
-
-          deckRef.attemptsOnCurrent++;
-          box.classList.add('miss');
-
-          if (transcript === '') {
-            // Se o Kodular retornou vazio (silêncio / Error 3806), deixa livre para toque manual sem loop
-            if (statusEl) {
-              statusEl.style.color = '#e63946';
-              statusEl.textContent = 'Não captei áudio. Toque no microfone 🎙️ e fale novamente!';
-            }
-          } else if (deckRef.attemptsOnCurrent < 2 && !currentItem.isRetry) {
-            if (statusEl) {
-              statusEl.style.color = '#e63946';
-              statusEl.textContent = `Ouvi "${transcript}". Preparando microfone...`;
-            }
-            deckTimer = setTimeout(() => {
-              box.classList.remove('miss');
-              triggerDeckListen();
-            }, 2300);
-          } else {
-            deckRef.queue.push({ es: currentItem.es, pt: currentItem.pt, isRetry: true });
-            if (statusEl) {
-              statusEl.style.color = '#e63946';
-              statusEl.textContent = `⏭️ Ouvi "${transcript}". Vamos tentar "${currentItem.es}" no final!`;
-            }
-            deckTimer = setTimeout(() => advanceDeckCard(), 1800);
+        if (deckRef.attemptsOnCurrent < 2 && !currentItem.isRetry) {
+          if (statusEl) {
+            statusEl.style.color = '#e63946';
+            statusEl.textContent = `Ouvi "${transcript}". Preparando microfone...`;
           }
-        }, 1100);
+          deckTimer = setTimeout(() => {
+            box.classList.remove('miss');
+            triggerDeckListen();
+          }, 2300);
+        } else {
+          deckRef.queue.push({ es: currentItem.es, pt: currentItem.pt, isRetry: true });
+          if (statusEl) {
+            statusEl.style.color = '#e63946';
+            statusEl.textContent = `⏭️ Ouvi "${transcript}". Vamos tentar "${currentItem.es}" no final!`;
+          }
+          deckTimer = setTimeout(() => advanceDeckCard(), 1800);
+        }
       }
     }
 
