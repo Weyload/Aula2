@@ -3,76 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Aula 2 - Conversa Inicial | Fale&Go</title>
+  <title>Aula 3 - Clima e Cafeteria | Fale&Go</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; }
     body { background-color: #0b2545; color: #ffffff; min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 40px; }
-    
+
     .header { background: #081c33; padding: 14px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
     .back-btn { background: rgba(255,255,255,0.1); border: none; color: #ffb703; font-size: 20px; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .header-title { font-size: 18px; font-weight: 800; color: #ffffff; }
+
     .container { padding: 20px; max-width: 500px; margin: 0 auto; width: 100%; }
-    
+
     .mascot-section { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px; }
-    .capybara-avatar { width: 70px; height: 70px; background: #ffb703; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 6px 16px rgba(0,0,0,0.3); flex-shrink: 0; border: 3px solid #ffffff; }
+    .capybara-avatar { height: 110px; width: auto; display: block; flex-shrink: 0; }
     .speech-bubble { background: #ffffff; color: #0b2545; padding: 14px 18px; border-radius: 18px; border-top-left-radius: 4px; font-size: 14px; font-weight: 700; line-height: 1.4; box-shadow: 0 6px 16px rgba(0,0,0,0.2); min-height: 70px; position: relative; flex: 1; }
     .cursor { display: inline-block; width: 2px; height: 14px; background-color: #0b2545; margin-left: 2px; animation: blink 0.7s infinite; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; margin-bottom: 12px; gap: 10px; }
-    .section-title { font-size: 18px; font-weight: 900; color: #ffb703; display: flex; align-items: center; gap: 8px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; gap: 10px; }
+    .section-title { font-size: 18px; font-weight: 900; color: #ffb703; }
     .progress-pill { background: #134074; color: #2ec4b6; border: 1px solid #1d5393; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; white-space: nowrap; }
 
-    .vocab-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 12px 14px; font-size: 12px; color: #e1e9f0; line-height: 1.7; margin-bottom: 20px; font-weight: 700; }
-    .vocab-tag { display: inline-block; background: #134074; color: #ffb703; padding: 2px 7px; border-radius: 6px; font-weight: 800; margin: 2px 1px; font-size: 11px; }
+    .vocab-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #e1e9f0; line-height: 1.6; margin-bottom: 20px; font-weight: 700; }
+    .vocab-tag { display: inline-block; background: #134074; color: #ffb703; padding: 2px 8px; border-radius: 6px; font-weight: 800; margin: 2px; font-size: 12px; }
 
     .exercise-card { background: #ffffff; color: #0b2545; border-radius: 20px; padding: 18px; margin-bottom: 20px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); }
-    .question-text { font-size: 15px; font-weight: 800; margin-bottom: 14px; line-height: 1.4; }
-    .options-grid { display: flex; flex-direction: column; gap: 10px; }
-    .opt-btn { background: #eef4f8; border: 2px solid #d0e1f9; padding: 12px 16px; border-radius: 12px; font-weight: 800; font-size: 14px; color: #0b2545; cursor: pointer; text-align: left; transition: all 0.2s; }
-    .opt-btn:disabled { cursor: default; }
-    .opt-btn.correct { background: #2ec4b6 !important; border-color: #2ec4b6 !important; color: #ffffff !important; }
-    .opt-btn.wrong { background: #e63946 !important; border-color: #e63946 !important; color: #ffffff !important; opacity: 0.85; }
+    .question-text { font-size: 15px; font-weight: 800; margin-bottom: 14px; }
 
-    /* --- DINÂMICA 1: ÁUDIO SEM TEXTO + REVELAÇÃO --- */
-    .audio-prompt-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-    .audio-play-btn { background: #ffb703; color: #0b2545; border: none; padding: 11px 18px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(255, 183, 3, 0.35); transition: transform 0.15s; }
-    .audio-play-btn:active { transform: scale(0.96); }
-    .revealed-word { display: none; background: #0b2545; color: #ffb703; padding: 8px 14px; border-radius: 10px; font-weight: 900; font-size: 15px; letter-spacing: 0.5px; }
-    .revealed-word.visible { display: inline-block; animation: popIn 0.25s ease; }
-    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-    /* --- DINÂMICA 2: LIGUE AS PALAVRAS (6 PARES) --- */
-    .match-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .match-col { display: flex; flex-direction: column; gap: 8px; }
-    .match-col-title { font-size: 11px; font-weight: 900; text-transform: uppercase; color: #5c677d; text-align: center; margin-bottom: 2px; }
-    .match-btn { background: #eef4f8; border: 2px solid #d0e1f9; padding: 10px 8px; border-radius: 12px; font-weight: 800; font-size: 13px; color: #0b2545; cursor: pointer; text-align: center; transition: all 0.2s; min-height: 44px; display: flex; align-items: center; justify-content: center; }
-    .match-btn.selected { background: #134074; border-color: #ffb703; color: #ffffff; transform: scale(1.02); }
-    .match-btn.matched { background: #2ec4b6 !important; border-color: #2ec4b6 !important; color: #ffffff !important; cursor: default; opacity: 0.9; }
-    .match-btn.flash-orange { animation: orangeFlash 0.6s ease; }
-    @keyframes orangeFlash {
-      0%, 100% { background: #eef4f8; border-color: #d0e1f9; color: #0b2545; }
-      25%, 75% { background: #ff9f1c; border-color: #f77f00; color: #ffffff; transform: scale(1.03); }
-    }
-
-    /* --- DINÂMICA 3: PLAYLIST DE FALA COM BOTÃO MANUAL --- */
-    .auto-speech-box { background: #eef4f8; border-radius: 16px; padding: 18px; text-align: center; border: 2px solid #d0e1f9; transition: all 0.3s ease; }
-    .auto-speech-box.state-green { background: #d8f8f5; border-color: #2ec4b6; }
-    .auto-speech-box.state-warn { background: #fff3d6; border-color: #ffb703; }
-    .auto-speech-box.state-error { background: #ffe3e6; border-color: #e63946; }
-    .start-speech-btn { background: #0b2545; color: #ffb703; border: none; padding: 13px 22px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(11, 37, 69, 0.25); }
-    .speech-card-counter { font-size: 12px; font-weight: 900; color: #5c677d; margin-bottom: 6px; }
-    .speech-target-big { font-size: 24px; font-weight: 900; color: #0b2545; margin: 10px 0; letter-spacing: 0.5px; }
-    .speech-status-msg { font-size: 13px; font-weight: 800; color: #5c677d; min-height: 20px; margin-top: 10px; line-height: 1.4; }
-    .mic-btn { width: 58px; height: 58px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 25px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: inline-flex; align-items: center; justify-content: center; margin-top: 6px; transition: transform 0.15s; }
+    .mic-btn { width: 58px; height: 58px; border-radius: 50%; background: #ffb703; border: none; color: #0b2545; font-size: 25px; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 183, 3, 0.4); display: flex; align-items: center; justify-content: center; transition: transform 0.15s; }
     .mic-btn:active { transform: scale(0.94); }
-    .mic-btn:disabled { opacity: 0.5; cursor: default; }
     .mic-btn.listening { animation: pulse 1s infinite; background: #e63946; color: #fff; }
     @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); } }
-    .speech-summary { font-size: 14px; font-weight: 900; color: #0b2545; line-height: 1.6; }
 
-    /* --- MODAIS --- */
+    /* --- CARDS DE FALA DE TROCA AUTOMÁTICA --- */
+    .auto-speech-box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px; background: #eef4f8; border: 2px solid #d0e1f9; border-radius: 16px; transition: all 0.25s ease; }
+    .auto-speech-box.hit { background: #e6faf8; border-color: #2ec4b6; }
+    .auto-speech-box.miss { background: #ffeaea; border-color: #e63946; }
+    .speech-card-counter { background: #134074; color: #ffb703; font-size: 11px; font-weight: 900; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .speech-target-big { font-size: 25px; font-weight: 900; color: #0b2545; text-align: center; letter-spacing: 0.5px; margin-top: 2px; }
+    .speech-target-pt { font-size: 13px; font-weight: 800; color: #5c677d; text-align: center; margin-bottom: 4px; }
+    .speech-status-msg { font-size: 13px; font-weight: 800; color: #5c677d; text-align: center; min-height: 22px; }
+    .btn-start-deck { background: #ffb703; color: #0b2545; border: none; padding: 12px 24px; border-radius: 14px; font-weight: 900; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(255, 183, 3, 0.35); margin-top: 4px; }
+    .btn-hear-word { background: #d0e1f9; color: #134074; border: none; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 900; cursor: pointer; }
+
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
     .modal-overlay.show { display: flex; opacity: 1; visibility: visible; }
     .modal-box { background: #ffffff; color: #0b2545; padding: 24px; border-radius: 20px; text-align: center; max-width: 380px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -80,249 +54,108 @@
     .modal-desc { font-size: 14px; color: #5c677d; font-weight: 700; line-height: 1.4; }
     .btn-primary { background: #ffb703; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; }
     .btn-secondary { background: #e1e9f0; color: #0b2545; border: none; padding: 12px; border-radius: 12px; font-weight: 900; flex: 1; cursor: pointer; }
-    .btn-continue { background: #ffb703; color: #0b2545; border: none; padding: 14px 28px; border-radius: 50px; font-weight: 900; font-size: 16px; margin-top: 20px; cursor: pointer; width: 100%; }
     #victory-modal .modal-box { max-width: 340px; }
+    .btn-continue { background: #ffb703; color: #0b2545; border: none; padding: 14px 28px; border-radius: 50px; font-weight: 900; font-size: 16px; margin-top: 20px; cursor: pointer; width: 100%; }
   </style>
 </head>
 <body>
 
-  <!-- TOPO DA AULA -->
+  <!-- TOPO -->
   <div class="header">
     <button class="back-btn" onclick="confirmExit()">←</button>
-    <div class="header-title">Aula 2: Conversa Inicial</div>
+    <div class="header-title">Aula 3: Clima e Cafeteria - Básico</div>
   </div>
 
   <div class="container">
 
+    <!-- BALÃO DA CAPIVARA -->
     <div class="mascot-section">
-      <div class="capybara-avatar">🦫</div>
+      <img class="capybara-avatar" src="capiSombrinhaSfundo.png" alt="Capivara">
       <div class="speech-bubble">
-        <span id="typed-text"></span><span class="cursor"></span>
+        <span class="typed-text" data-texto="Nesta aula vamos conversar sobre o clima e fazer pedidos em uma cafeteria! Comece treinando sua pronúncia nos cards."></span><span class="cursor"></span>
       </div>
     </div>
 
     <div class="section-header">
-      <div class="section-title">🗣️ Fluxo da Conversa</div>
-      <div class="progress-pill" id="progress-counter">0 / 15 concluidos</div>
+      <div class="section-title">🎯 Desafios de Pronúncia</div>
+      <div class="progress-pill" id="progress-counter">0 / 3 concluidos</div>
     </div>
 
     <div class="vocab-box">
-      24 palavras vitais na ordem de um encontro:<br>
-      <span class="vocab-tag">Hola</span>
-      <span class="vocab-tag">Cómo</span>
-      <span class="vocab-tag">Estás</span>
-      <span class="vocab-tag">Estoy</span>
-      <span class="vocab-tag">Bien</span>
-      <span class="vocab-tag">Genial</span>
-      <span class="vocab-tag">Gracias</span>
-      <span class="vocab-tag">Tú</span>
-      <span class="vocab-tag">Nombre</span>
-      <span class="vocab-tag">Me llamo</span>
-      <span class="vocab-tag">Soy</span>
-      <span class="vocab-tag">Llamas</span>
-      <span class="vocab-tag">Mucho gusto</span>
-      <span class="vocab-tag">Encantado</span>
+      Você vai aprender:<br>
+      <span class="vocab-tag">Soleado</span>
+      <span class="vocab-tag">Lloviendo</span>
+      <span class="vocab-tag">Paraguas</span>
+      <span class="vocab-tag">Hace calor</span>
+      <span class="vocab-tag">Hace frío</span>
       <span class="vocab-tag">Disculpa</span>
-      <span class="vocab-tag">Libre</span>
-      <span class="vocab-tag">Por favor</span>
-      <span class="vocab-tag">Amigo</span>
-      <span class="vocab-tag">Me gusta</span>
-      <span class="vocab-tag">También</span>
-      <span class="vocab-tag">Bonito</span>
-      <span class="vocab-tag">De nada</span>
-      <span class="vocab-tag">Hasta pronto</span>
-      <span class="vocab-tag">Adiós</span>
+      <span class="vocab-tag">Mochila</span>
+      <span class="vocab-tag">Muy chulo</span>
+      <span class="vocab-tag">Cafetería</span>
+      <span class="vocab-tag">Taxi</span>
+      <span class="vocab-tag">Piña</span>
+      <span class="vocab-tag">Aguacate</span>
+      <span class="vocab-tag">Cajero automático</span>
+      <span class="vocab-tag">Botella</span>
+      <span class="vocab-tag">Celular</span>
+      <span class="vocab-tag">Postre</span>
+      <span class="vocab-tag">Pastel</span>
     </div>
 
-    <!-- EXERCÍCIO 1: ÁUDIO SEM TEXTO (#1 Hola) -->
+    <!-- EXERCÍCIO 1 (CARDS DE FALA 1: SOBRE O CLIMA) -->
     <div class="exercise-card" id="q1">
-      <div class="question-text">1. Ouça a primeira palavra para iniciar qualquer conversa e escolha a tradução:</div>
-      <div class="audio-prompt-row">
-        <button class="audio-play-btn" onclick="playListeningWord('hola')">🔊 Ouvir palavra</button>
-        <span id="reveal-q1" class="revealed-word"></span>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q1', 'Hola', 'reveal-q1')">Olá</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q1', 'Hola', 'reveal-q1')">Adeus</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q1', 'Hola', 'reveal-q1')">Desculpa</button>
+      <div class="question-text">1. Pronúncia Rápida 1 (Sobre o Clima): Fale cada expressão em espanhol conforme os cards avançam:</div>
+      <div class="auto-speech-box" id="deck-box-q1">
+        <div class="speech-card-counter">6 Cards • Clima</div>
+        <div style="font-size:13px; font-weight:700; color:#5c677d; text-align:center;">
+          Hace calor • Hace frío • Día soleado • Está lloviendo • Mi paraguas • Día hermoso
+        </div>
+        <button class="btn-start-deck" onclick="startSpeechDeck('q1', [
+          { es: 'Hace calor', pt: 'Está calor' },
+          { es: 'Hace frío', pt: 'Está frio' },
+          { es: 'Día soleado', pt: 'Dia ensolarado' },
+          { es: 'Está lloviendo', pt: 'Está chovendo' },
+          { es: 'Mi paraguas', pt: 'Meu guarda-chuva' },
+          { es: 'Día hermoso', pt: 'Dia bonito' }
+        ])">🎙️ Iniciar Rodada 1</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 2: COMPLETAR A FRASE (#2 Cómo) -->
+    <!-- EXERCÍCIO 2 (CARDS DE FALA 2: NA FILA DA CAFETERIA) -->
     <div class="exercise-card" id="q2">
-      <div class="question-text">2. Depois de cumprimentar, pergunte como a pessoa está: "¿_____ estás?"</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Dónde</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q2')">Cómo</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q2')">Quién</button>
+      <div class="question-text">2. Pronúncia Rápida 2 (Na Fila da Cafeteria): Fale as palavras e expressões do diálogo:</div>
+      <div class="auto-speech-box" id="deck-box-q2">
+        <div class="speech-card-counter">6 Cards • Cafeteria</div>
+        <div style="font-size:13px; font-weight:700; color:#5c677d; text-align:center;">
+          Disculpa • Tu mochila • Muy chulo • Muchas gracias • De nada • El café
+        </div>
+        <button class="btn-start-deck" onclick="startSpeechDeck('q2', [
+          { es: 'Disculpa', pt: 'Com licença' },
+          { es: 'Tu mochila', pt: 'Sua mochila' },
+          { es: 'Muy chulo', pt: 'Muito legal' },
+          { es: 'Muchas gracias', pt: 'Muito obrigado(a)' },
+          { es: 'De nada', pt: 'De nada' },
+          { es: 'El café', pt: 'O café' }
+        ])">🎙️ Iniciar Rodada 2</button>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 3: MÚLTIPLA ESCOLHA (#3 Estás) -->
+    <!-- EXERCÍCIO 3 (CARDS DE FALA 3: VOCABULÁRIO DAS IMAGENS) -->
     <div class="exercise-card" id="q3">
-      <div class="question-text">3. Na pergunta "¿Cómo estás?", o que significa a palavra "estás"?</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q3')">Você está</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Você vai</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q3')">Você tem</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 4: ÁUDIO SEM TEXTO (#4 Estoy) -->
-    <div class="exercise-card" id="q4">
-      <div class="question-text">4. Ouça a palavra usada para começar sua resposta e marque o significado:</div>
-      <div class="audio-prompt-row">
-        <button class="audio-play-btn" onclick="playListeningWord('estoy')">🔊 Ouvir palavra</button>
-        <span id="reveal-q4" class="revealed-word"></span>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q4', 'Estoy', 'reveal-q4')">Quero</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q4', 'Estoy', 'reveal-q4')">Estou</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q4', 'Estoy', 'reveal-q4')">Tenho</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 5: LIGUE AS PALAVRAS - BLOCO 1 -->
-    <div class="exercise-card" id="q5">
-      <div class="question-text">5. Ligue as palavras da resposta e apresentação com suas traduções:</div>
-      <div class="match-columns" id="match-q5">
-        <div class="match-col">
-          <div class="match-col-title">Português</div>
-          <button class="match-btn" data-side="pt" data-pair="0" onclick="handleMatchClick(this, 'q5')">Bem</button>
-          <button class="match-btn" data-side="pt" data-pair="1" onclick="handleMatchClick(this, 'q5')">Ótimo / Genial</button>
-          <button class="match-btn" data-side="pt" data-pair="2" onclick="handleMatchClick(this, 'q5')">Obrigado(a)</button>
-          <button class="match-btn" data-side="pt" data-pair="3" onclick="handleMatchClick(this, 'q5')">Você</button>
-          <button class="match-btn" data-side="pt" data-pair="4" onclick="handleMatchClick(this, 'q5')">Nome</button>
-          <button class="match-btn" data-side="pt" data-pair="5" onclick="handleMatchClick(this, 'q5')">Me chamo</button>
+      <div class="question-text">3. Pronúncia Rápida 3 (Objetos e Comidas): Diga o nome de cada item em espanhol:</div>
+      <div class="auto-speech-box" id="deck-box-q3">
+        <div class="speech-card-counter">6 Cards • Vocabulário</div>
+        <div style="font-size:13px; font-weight:700; color:#5c677d; text-align:center;">
+          Taxi • Piña • Aguacate • Cafetería • Botella • Pastel
         </div>
-        <div class="match-col">
-          <div class="match-col-title">Espanhol</div>
-          <button class="match-btn" data-side="es" data-pair="2" data-word="gracias" onclick="handleMatchClick(this, 'q5')">Gracias</button>
-          <button class="match-btn" data-side="es" data-pair="5" data-word="me llamo" onclick="handleMatchClick(this, 'q5')">Me llamo</button>
-          <button class="match-btn" data-side="es" data-pair="0" data-word="bien" onclick="handleMatchClick(this, 'q5')">Bien</button>
-          <button class="match-btn" data-side="es" data-pair="4" data-word="nombre" onclick="handleMatchClick(this, 'q5')">Nombre</button>
-          <button class="match-btn" data-side="es" data-pair="1" data-word="genial" onclick="handleMatchClick(this, 'q5')">Genial</button>
-          <button class="match-btn" data-side="es" data-pair="3" data-word="tú" onclick="handleMatchClick(this, 'q5')">Tú</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 6: COMPLETAR A FRASE (#11 Soy) -->
-    <div class="exercise-card" id="q6">
-      <div class="question-text">6. Outra forma simples de dizer quem você é: "¡Hola! _____ María." (Eu sou María)</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q6')">Soy</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Voy</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Doy</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 7: ÁUDIO SEM TEXTO (#12 Llamas) -->
-    <div class="exercise-card" id="q7">
-      <div class="question-text">7. Ouça a palavra final da pergunta "¿Cómo te _____?" e escolha o sentido:</div>
-      <div class="audio-prompt-row">
-        <button class="audio-play-btn" onclick="playListeningWord('llamas')">🔊 Ouvir palavra</button>
-        <span id="reveal-q7" class="revealed-word"></span>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q7', 'Llamas', 'reveal-q7')">Mora</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q7', 'Llamas', 'reveal-q7')">Trabalha</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q7', 'Llamas', 'reveal-q7')">Chama (se chama)</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 8: MÚLTIPLA ESCOLHA (#13 Mucho gusto) -->
-    <div class="exercise-card" id="q8">
-      <div class="question-text">8. A pessoa acabou de dizer o nome dela. Qual expressão significa "Muito prazer"?</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">Hasta pronto</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q8')">Mucho gusto</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q8')">De nada</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 9: COMPLETAR A FRASE (#14 Encantado) -->
-    <div class="exercise-card" id="q9">
-      <div class="question-text">9. Complete outra forma educada de responder ao cumprimento: "_____ de conocerte."</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q9')">Cansado</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q9')">Ocupado</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q9')">Encantado</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 10: LIGUE AS PALAVRAS - BLOCO 2 -->
-    <div class="exercise-card" id="q10">
-      <div class="question-text">10. Ligue as palavras usadas para puxar assunto e fazer amizade:</div>
-      <div class="match-columns" id="match-q10">
-        <div class="match-col">
-          <div class="match-col-title">Português</div>
-          <button class="match-btn" data-side="pt" data-pair="0" onclick="handleMatchClick(this, 'q10')">Com licença</button>
-          <button class="match-btn" data-side="pt" data-pair="1" onclick="handleMatchClick(this, 'q10')">Livre</button>
-          <button class="match-btn" data-side="pt" data-pair="2" onclick="handleMatchClick(this, 'q10')">Por favor</button>
-          <button class="match-btn" data-side="pt" data-pair="3" onclick="handleMatchClick(this, 'q10')">Amigo</button>
-          <button class="match-btn" data-side="pt" data-pair="4" onclick="handleMatchClick(this, 'q10')">Eu gosto</button>
-          <button class="match-btn" data-side="pt" data-pair="5" onclick="handleMatchClick(this, 'q10')">Também</button>
-        </div>
-        <div class="match-col">
-          <div class="match-col-title">Espanhol</div>
-          <button class="match-btn" data-side="es" data-pair="3" data-word="amigo" onclick="handleMatchClick(this, 'q10')">Amigo</button>
-          <button class="match-btn" data-side="es" data-pair="0" data-word="disculpa" onclick="handleMatchClick(this, 'q10')">Disculpa</button>
-          <button class="match-btn" data-side="es" data-pair="4" data-word="me gusta" onclick="handleMatchClick(this, 'q10')">Me gusta</button>
-          <button class="match-btn" data-side="es" data-pair="1" data-word="libre" onclick="handleMatchClick(this, 'q10')">Libre</button>
-          <button class="match-btn" data-side="es" data-pair="5" data-word="también" onclick="handleMatchClick(this, 'q10')">También</button>
-          <button class="match-btn" data-side="es" data-pair="2" data-word="por favor" onclick="handleMatchClick(this, 'q10')">Por favor</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 11: ÁUDIO SEM TEXTO (#21 Bonito) -->
-    <div class="exercise-card" id="q11">
-      <div class="question-text">11. Ouça o adjetivo usado para fazer um elogio sincero e escolha a tradução:</div>
-      <div class="audio-prompt-row">
-        <button class="audio-play-btn" onclick="playListeningWord('bonito')">🔊 Ouvir palavra</button>
-        <span id="reveal-q11" class="revealed-word"></span>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkListeningAnswer(this, true, 'q11', 'Bonito', 'reveal-q11')">Bonito</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q11', 'Bonito', 'reveal-q11')">Caro</button>
-        <button class="opt-btn" onclick="checkListeningAnswer(this, false, 'q11', 'Bonito', 'reveal-q11')">Antigo</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 12: COMPLETAR A FRASE (#22 De nada) -->
-    <div class="exercise-card" id="q12">
-      <div class="question-text">12. Quando alguém agradecer seu elogio dizendo "Muchas gracias", responda: "_____."</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q12')">Mucho gusto</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q12')">De nada</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q12')">Cómo estás</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 13: MÚLTIPLA ESCOLHA (#23 Hasta pronto) -->
-    <div class="exercise-card" id="q13">
-      <div class="question-text">13. Na hora de encerrar a conversa, o que significa "Hasta pronto"?</div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q13')">Até breve</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">Bom dia</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">Com licença</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 14: PLAYLIST DE FALA COM BOTÃO MANUAL - PARTE 1 -->
-    <div class="exercise-card" id="q14">
-      <div class="question-text">14. Prática de Fala (1/2): Toque no microfone abaixo de cada palavra para pronunciar:</div>
-      <div class="auto-speech-box" id="deck-box-q14">
-        <button class="start-speech-btn" onclick="startSpeechDeck('q14', ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'])">🎙️ Iniciar Prática de Fala</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 15: PLAYLIST DE FALA COM BOTÃO MANUAL - PARTE 2 -->
-    <div class="exercise-card" id="q15">
-      <div class="question-text">15. Prática de Fala (2/2): Complete o treino de pronúncia do diálogo:</div>
-      <div class="auto-speech-box" id="deck-box-q15">
-        <button class="start-speech-btn" onclick="startSpeechDeck('q15', ['Bien', 'Nombre', 'Por favor', 'Hasta pronto'])">🎙️ Iniciar Prática de Fala</button>
+        <button class="btn-start-deck" onclick="startSpeechDeck('q3', [
+          { es: 'Taxi', pt: 'Táxi' },
+          { es: 'Piña', pt: 'Abacaxi' },
+          { es: 'Aguacate', pt: 'Abacate' },
+          { es: 'Cafetería', pt: 'Cafeteria' },
+          { es: 'Botella', pt: 'Garrafa' },
+          { es: 'Pastel', pt: 'Bolo' }
+        ])">🎙️ Iniciar Rodada 3</button>
       </div>
     </div>
 
@@ -332,12 +165,12 @@
   <div id="victory-modal" class="modal-overlay">
     <div class="modal-box">
       <div style="font-size: 60px;">🏆</div>
-      <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Sensacional!</div>
+      <div style="font-size: 26px; font-weight: 900; color: #2ec4b6; margin-top: 10px;">¡Excelente Trabalho!</div>
       <p style="font-size: 14px; font-weight: 700; color: #6c757d; margin-top: 8px;">
-        Você concluiu os 15 exercícios e dominou a conversa inicial!
+        Você concluiu os 3 decks de pronúncia da Aula 3!
       </p>
       <div style="margin-top: 15px; background: #eef4f8; padding: 12px; border-radius: 12px; font-weight: 800; color: #ffb703;">
-        🌟 +150 XP Ganhos | Progresso Atualizado
+        🌟 +50 XP Ganhos | Progresso Salvo
       </div>
       <button class="btn-continue" onclick="voltarParaAulasBasicas()">Voltar para a Trilha</button>
     </div>
@@ -358,8 +191,12 @@
 
   <script>
     const URL_AULAS_BASICAS = 'https://weyload.github.io/Aulas-basicas/';
+    const LESSON_ID = 'clima_cafeteria';
+    const totalQuestions = 3;
+    const completedQuestions = new Set();
 
     function voltarParaAulasBasicas() {
+      cleanupSpeechEngines();
       if (document.referrer && document.referrer.includes('weyload.github.io') && document.referrer !== window.location.href) {
         window.location.href = document.referrer;
       } else {
@@ -367,377 +204,325 @@
       }
     }
 
-    // 1. MÁQUINA DE ESCREVER DA CAPIVARA
-    const textToType = "¡Hola! Vamos aprender passo a passo as palavras essenciais para iniciar uma conversa e fazer amigos em espanhol. ¡Vamos!";
-    let typeIndex = 0;
-    function typeWriter() {
-      if (typeIndex < textToType.length) {
-        document.getElementById("typed-text").innerHTML += textToType.charAt(typeIndex);
-        typeIndex++;
-        setTimeout(typeWriter, 30);
-      }
+    function iniciarBaloesMascote() {
+      const observador = new IntersectionObserver((entradas, obs) => {
+        entradas.forEach((entrada) => {
+          if (entrada.isIntersecting) {
+            const elemento = entrada.target;
+            const texto = elemento.getAttribute('data-texto') || '';
+            let index = 0;
+
+            function digitar() {
+              if (index < texto.length) {
+                elemento.textContent += texto.charAt(index);
+                index++;
+                setTimeout(digitar, 30);
+              }
+            }
+
+            digitar();
+            obs.unobserve(elemento);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      document.querySelectorAll('.typed-text').forEach((el) => observador.observe(el));
     }
-    window.addEventListener('load', typeWriter);
 
-    // 2. CONTROLE GERAL DOS 15 EXERCÍCIOS
-    const totalQuestions = 15;
-    const completedQuestions = new Set();
+    window.addEventListener('load', iniciarBaloesMascote);
 
-    function markQuestionDone(qId) {
-      if (completedQuestions.has(qId)) return;
-      completedQuestions.add(qId);
+    function updateProgressUI() {
       const counter = document.getElementById('progress-counter');
       if (counter) {
         counter.textContent = `${completedQuestions.size} / ${totalQuestions} concluidos`;
       }
-      if (completedQuestions.size >= totalQuestions) {
-        saveUserProgress(150);
-        setTimeout(() => {
-          playVictorySound();
-          document.getElementById('victory-modal').classList.add('show');
-        }, 500);
-      }
     }
 
-    // SOM DE ACERTO EM 2 NOTAS ASCENDENTES (EXERCÍCIOS 1 A 13)
-    function playCorrectSound() {
-      try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const ctx = new AudioContext();
-        const notes = [523.25, 783.99];
-        notes.forEach((freq, index) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = 'sine';
-          osc.frequency.value = freq;
-          const startTime = ctx.currentTime + index * 0.1;
-          gain.gain.setValueAtTime(0.22, startTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.28);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(startTime);
-          osc.stop(startTime + 0.28);
-        });
-      } catch (e) {}
-    }
-
-    // 3. MÚLTIPLA ESCOLHA E COMPLETAR FRASE
-    function checkAnswer(btn, isCorrect, qId) {
-      if (completedQuestions.has(qId)) return;
-      const card = document.getElementById(qId);
-      const buttons = card.querySelectorAll('.opt-btn');
-
-      if (isCorrect) {
-        btn.classList.add('correct');
-        buttons.forEach(b => b.disabled = true);
-        playCorrectSound();
-        markQuestionDone(qId);
-      } else {
-        btn.classList.add('wrong');
-        btn.disabled = true;
-      }
-    }
-
-    // 4. ESCUTAR SEM VER A PALAVRA + REVELAR AO RESPONDER
-    function playListeningWord(word) {
-      hablarPronunciacionCorrecta(word);
-    }
-
-    function checkListeningAnswer(btn, isCorrect, qId, spanishWord, revealId) {
-      const revealEl = document.getElementById(revealId);
-      if (revealEl) {
-        revealEl.textContent = spanishWord.toUpperCase();
-        revealEl.classList.add('visible');
-      }
-
-      if (completedQuestions.has(qId)) return;
-      const card = document.getElementById(qId);
-      const buttons = card.querySelectorAll('.opt-btn');
-
-      if (isCorrect) {
-        btn.classList.add('correct');
-        buttons.forEach(b => b.disabled = true);
-        playCorrectSound();
-        markQuestionDone(qId);
-      } else {
-        btn.classList.add('wrong');
-        btn.disabled = true;
-      }
-    }
-
-    // 5. LIGUE AS PALAVRAS (6 PARES PORTUGUÊS <-> ESPANHOL)
-    const matchState = {};
-
-    function handleMatchClick(btn, qId) {
-      if (btn.classList.contains('matched') || btn.classList.contains('flash-orange')) return;
-
-      if (!matchState[qId]) {
-        matchState[qId] = { selected: null, matchedCount: 0 };
-      }
-      const state = matchState[qId];
-
-      if (btn.dataset.side === 'es' && btn.dataset.word) {
-        hablarPronunciacionCorrecta(btn.dataset.word);
-      }
-
-      if (!state.selected) {
-        state.selected = btn;
-        btn.classList.add('selected');
-        return;
-      }
-
-      if (state.selected === btn) {
-        btn.classList.remove('selected');
-        state.selected = null;
-        return;
-      }
-
-      if (state.selected.dataset.side === btn.dataset.side) {
-        state.selected.classList.remove('selected');
-        state.selected = btn;
-        btn.classList.add('selected');
-        return;
-      }
-
-      const firstBtn = state.selected;
-      state.selected = null;
-
-      if (firstBtn.dataset.pair === btn.dataset.pair) {
-        firstBtn.classList.remove('selected');
-        firstBtn.classList.add('matched');
-        btn.classList.add('matched');
-        firstBtn.disabled = true;
-        btn.disabled = true;
-        state.matchedCount++;
-        playCorrectSound();
-
-        if (state.matchedCount >= 6) {
-          markQuestionDone(qId);
-        }
-      } else {
-        firstBtn.classList.remove('selected');
-        firstBtn.classList.add('flash-orange');
-        btn.classList.add('flash-orange');
-        setTimeout(() => {
-          firstBtn.classList.remove('flash-orange');
-          btn.classList.remove('flash-orange');
-        }, 620);
-      }
-    }
-
-    // 6. PLAYLIST DE FALA COM BOTÃO MANUAL E PONTE APP INVENTOR DA AULA 1
-    const deckInitialWords = {
-      q14: ['Adiós', 'Hola', 'Gracias', 'Mucho gusto'],
-      q15: ['Bien', 'Nombre', 'Por favor', 'Hasta pronto']
-    };
-
-    let activeDeck = null;
-    let deckTimer = null;
-
-    function startSpeechDeck(qId, wordList) {
-      if (completedQuestions.has(qId)) return;
-
-      if (deckTimer) {
-        clearTimeout(deckTimer);
-        deckTimer = null;
-      }
-
-      if (activeDeck && activeDeck.qId !== qId && !completedQuestions.has(activeDeck.qId)) {
-        const prevQId = activeDeck.qId;
-        const prevBox = document.getElementById(`deck-box-${prevQId}`);
-        const prevWords = JSON.stringify(deckInitialWords[prevQId]).replace(/"/g, "'");
-        if (prevBox) {
-          prevBox.className = 'auto-speech-box';
-          prevBox.innerHTML = `<button class="start-speech-btn" onclick="startSpeechDeck('${prevQId}', ${prevWords})">🎙️ Iniciar Prática de Fala</button>`;
-        }
-      }
-
-      activeDeck = {
-        qId: qId,
-        queue: wordList.map(w => ({ word: w, isRetry: false })),
-        index: 0,
-        attemptsOnCurrent: 0,
-        hits: 0,
-        misses: 0,
-        isTransitioning: false
-      };
-
-      renderSpeechCard();
-    }
-
-    function renderSpeechCard() {
-      if (!activeDeck) return;
-      const box = document.getElementById(`deck-box-${activeDeck.qId}`);
-      const currentItem = activeDeck.queue[activeDeck.index];
-      const retryBadge = currentItem.isRetry ? ' (Repescagem)' : '';
-
-      box.className = 'auto-speech-box';
-      box.innerHTML = `
-        <div class="speech-card-counter">Palavra ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
-        <div class="speech-target-big">${currentItem.word.toUpperCase()}</div>
-        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="triggerDeckListen()">🎙️</button>
-        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">Toque no microfone 🎙️ e fale a palavra</div>
-      `;
-    }
-
-    function triggerDeckListen() {
-      if (!activeDeck || activeDeck.isTransitioning) return;
-      const currentItem = activeDeck.queue[activeDeck.index];
-      if (!currentItem) return;
-
-      const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
-      const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
-
-      if (window.AppInventor) {
-        if (micBtn) micBtn.classList.add('listening');
-        if (statusEl) {
-          statusEl.innerHTML = "🎙️ Ouvindo... Fale agora!";
-          statusEl.style.color = "#ffb703";
-        }
-        window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
-        return;
-      }
-
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        processarResultadoVoz(currentItem.word);
-        return;
-      }
-
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      recognition.lang = 'es-ES';
-
-      if (micBtn) micBtn.classList.add('listening');
-      if (statusEl) {
-        statusEl.innerHTML = `Ouvindo... Diga "${currentItem.word.toUpperCase()}"`;
-        statusEl.style.color = '#0b2545';
-      }
-
-      recognition.start();
-
-      recognition.onresult = function(event) {
-        if (micBtn) micBtn.classList.remove('listening');
-        processarResultadoVoz(event.results[0][0].transcript);
-      };
-
-      recognition.onerror = function() {
-        if (micBtn) micBtn.classList.remove('listening');
-        processarResultadoVoz("");
-      };
-    }
-
-    function receberTextoVoz(textoOuvido) {
-      if (!activeDeck) return;
-      const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
-      if (micBtn) micBtn.classList.remove('listening');
-      processarResultadoVoz(textoOuvido);
-    }
-
-    function processarResultadoVoz(transcript) {
-      if (!activeDeck || activeDeck.isTransitioning) return;
-      const deck = activeDeck;
-      const currentItem = deck.queue[deck.index];
-      if (!currentItem) return;
-
-      const box = document.getElementById(`deck-box-${deck.qId}`);
-      const statusEl = document.getElementById(`deck-status-${deck.qId}`);
-      const micBtn = document.getElementById(`deck-mic-${deck.qId}`);
-
-      let normTarget = currentItem.word.toLowerCase().trim()
-        .replace(/[¿?¡!.,]/g, '')
-        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]));
-
-      let normTranscript = transcript.toLowerCase().trim()
-        .replace(/[¿?¡!.,]/g, '')
-        .replace(/[áéíóú]/g, m => ({'á':'a','é':'e','í':'i','ó':'o','ú':'u'}[m]))
-        .replace(/\bestou\b/g, "estoy").replace(/\bola\b/g, "hola")
-        .replace(/\basta\b/g, "hasta").replace(/\bdise\b/g, "dice")
-        .replace(/\bgrasias\b/g, "gracias").replace(/\badios\b/g, "adios");
-
-      if (transcript !== "" && (normTranscript.includes(normTarget) || normTranscript.includes(normTarget.replace('ñ', 'n')))) {
-        deck.hits++;
-        deck.isTransitioning = true;
-        if (micBtn) micBtn.disabled = true;
-
-        box.className = 'auto-speech-box state-green';
-        if (statusEl) {
-          statusEl.innerHTML = `✅ Muito bem! ("${transcript}")`;
-          statusEl.style.color = '#1b7f75';
-        }
-        deckTimer = setTimeout(() => advanceSpeechDeck(), 1200);
-      } else {
-        deck.attemptsOnCurrent++;
-
-        if (deck.attemptsOnCurrent === 1) {
-          box.className = 'auto-speech-box state-warn';
-          if (statusEl) {
-            statusEl.innerHTML = transcript
-              ? `Ouvi "${transcript}". 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`
-              : `Não ouvi bem. 🔊 Ouça a pronúncia e toque no 🎙️ para repetir!`;
-            statusEl.style.color = '#b57c00';
-          }
-          hablarPronunciacionCorrecta(currentItem.word);
-        } else {
-          deck.isTransitioning = true;
-          if (micBtn) micBtn.disabled = true;
-          box.className = 'auto-speech-box state-error';
-
-          if (!currentItem.isRetry) {
-            deck.queue.push({ word: currentItem.word, isRetry: true });
-            if (statusEl) {
-              statusEl.innerHTML = `⏭️ Pulando... "${currentItem.word.toUpperCase()}" voltará na repescagem no final!`;
-              statusEl.style.color = '#c1121f';
-            }
-          } else {
-            deck.misses++;
-            if (statusEl) {
-              statusEl.innerHTML = `❌ Não foi dessa vez. Seguindo...`;
-              statusEl.style.color = '#c1121f';
-            }
-          }
-          deckTimer = setTimeout(() => advanceSpeechDeck(), 1500);
-        }
-      }
-    }
-
-    function advanceSpeechDeck() {
-      if (!activeDeck) return;
-      activeDeck.index++;
-      activeDeck.attemptsOnCurrent = 0;
-      activeDeck.isTransitioning = false;
-
-      if (activeDeck.index < activeDeck.queue.length) {
-        renderSpeechCard();
-      } else {
-        const finishedDeck = activeDeck;
-        activeDeck = null;
-
-        const box = document.getElementById(`deck-box-${finishedDeck.qId}`);
-        box.className = 'auto-speech-box state-green';
-        box.innerHTML = `
-          <div class="speech-summary">
-            🏁 Prática de fala concluída!<br>
-            <span style="color:#1b7f75;">✅ Acertos: ${finishedDeck.hits}</span> &nbsp;|&nbsp;
-            <span style="color:#e63946;">❌ Erros: ${finishedDeck.misses}</span>
-          </div>
-        `;
-        markQuestionDone(finishedDeck.qId);
-      }
-    }
-
-    // 7. SÍNTESE DE VOZ
     function hablarPronunciacionCorrecta(texto) {
       if (window.AppInventor) {
         window.AppInventor.setWebViewString("Falar_" + texto);
       } else if ('speechSynthesis' in window) {
         const synth = window.speechSynthesis;
+        synth.cancel();
         const utterThis = new SpeechSynthesisUtterance(texto);
         utterThis.lang = 'es-ES';
         synth.speak(utterThis);
       }
     }
 
-    // 8. AVISO DE SAÍDA E SALVAR XP
+    function playCorrectTone() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext();
+        [523.25, 783.99].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.1);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + i * 0.1 + 0.3);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + i * 0.1);
+          osc.stop(ctx.currentTime + i * 0.1 + 0.3);
+        });
+      } catch (e) {}
+    }
+
+    // CARDS DE FALA DE TROCA AUTOMÁTICA (SINCRONIZADO COM KODULAR)
+    let activeDeck = null;
+    let currentRecognition = null;
+    let deckTimer = null;
+    let feedbackDelayTimer = null;
+    let listenSessionCounter = 0;
+
+    function cleanupSpeechEngines() {
+      if (deckTimer) {
+        clearTimeout(deckTimer);
+        deckTimer = null;
+      }
+      if (feedbackDelayTimer) {
+        clearTimeout(feedbackDelayTimer);
+        feedbackDelayTimer = null;
+      }
+      if (currentRecognition) {
+        try {
+          currentRecognition.onresult = null;
+          currentRecognition.onerror = null;
+          currentRecognition.onend = null;
+          currentRecognition.abort();
+        } catch (e) {}
+        currentRecognition = null;
+      }
+      if ('speechSynthesis' in window) {
+        try { window.speechSynthesis.cancel(); } catch (e) {}
+      }
+    }
+
+    function startSpeechDeck(qId, cardList) {
+      if (completedQuestions.has(qId)) return;
+      cleanupSpeechEngines();
+
+      activeDeck = {
+        qId: qId,
+        queue: cardList.map(item => ({ es: item.es, pt: item.pt, isRetry: false })),
+        index: 0,
+        attemptsOnCurrent: 0,
+        hits: 0,
+        awaitingSpeech: false,
+        sessionId: 0
+      };
+
+      renderSpeechCard();
+      // Pausa de 1,8s ao iniciar para estabilizar o WebView antes de chamar o SpeechRecognizer
+      deckTimer = setTimeout(() => triggerDeckListen(), 1800);
+    }
+
+    function renderSpeechCard() {
+      if (!activeDeck) return;
+      const box = document.getElementById(`deck-box-${activeDeck.qId}`);
+      const currentItem = activeDeck.queue[activeDeck.index];
+      const retryBadge = currentItem.isRetry ? ' (Revisão)' : '';
+
+      box.className = 'auto-speech-box';
+      box.innerHTML = `
+        <div class="speech-card-counter">Card ${activeDeck.index + 1} de ${activeDeck.queue.length}${retryBadge}</div>
+        <div class="speech-target-big">${currentItem.es.toUpperCase()}</div>
+        <div class="speech-target-pt">Português: <strong>${currentItem.pt}</strong></div>
+        <button class="btn-hear-word" onclick="ouvirExemploCard()">🔊 Ouvir pronúncia</button>
+        <button class="mic-btn" id="deck-mic-${activeDeck.qId}" onclick="manualTriggerDeckListen()">🎙️</button>
+        <div class="speech-status-msg" id="deck-status-${activeDeck.qId}">⏳ Preparando microfone...</div>
+      `;
+    }
+
+    function ouvirExemploCard() {
+      if (!activeDeck) return;
+      const currentItem = activeDeck.queue[activeDeck.index];
+      hablarPronunciacionCorrecta(currentItem.es);
+    }
+
+    function manualTriggerDeckListen() {
+      if (!activeDeck) return;
+      if (deckTimer) clearTimeout(deckTimer);
+      if (feedbackDelayTimer) clearTimeout(feedbackDelayTimer);
+      const box = document.getElementById(`deck-box-${activeDeck.qId}`);
+      if (box) box.classList.remove('miss');
+      triggerDeckListen();
+    }
+
+    function triggerDeckListen() {
+      if (!activeDeck) return;
+      const currentItem = activeDeck.queue[activeDeck.index];
+      const micBtn = document.getElementById(`deck-mic-${activeDeck.qId}`);
+      const statusEl = document.getElementById(`deck-status-${activeDeck.qId}`);
+
+      listenSessionCounter++;
+      const sessionId = listenSessionCounter;
+      activeDeck.sessionId = sessionId;
+      activeDeck.awaitingSpeech = true;
+
+      if (micBtn) micBtn.classList.add('listening');
+      if (statusEl) {
+        statusEl.style.color = '#e63946';
+        statusEl.textContent = `🎙️ Ouvindo... Diga "${currentItem.es.toUpperCase()}"`;
+      }
+
+      if (window.AppInventor) {
+        window.AppInventor.setWebViewString("OuvirVoz_" + Date.now());
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        setTimeout(() => handleDeckResult(currentItem.es, sessionId), 700);
+        return;
+      }
+
+      const rec = new SpeechRecognition();
+      rec.lang = 'es-ES';
+      currentRecognition = rec;
+
+      rec.onresult = (event) => {
+        if (micBtn) micBtn.classList.remove('listening');
+        handleDeckResult(event.results[0][0].transcript, sessionId);
+      };
+
+      rec.onerror = () => {
+        if (micBtn) micBtn.classList.remove('listening');
+        handleDeckResult('', sessionId);
+      };
+
+      rec.start();
+    }
+
+    // Ponte chamada pelo Kodular quando o SpeechRecognizer retorna texto
+    function receberTextoVoz(textoOuvido) {
+      if (activeDeck && activeDeck.awaitingSpeech) {
+        handleDeckResult(textoOuvido, activeDeck.sessionId);
+      }
+    }
+
+    function normalizarTextoDeck(txt) {
+      return (txt || '').toLowerCase().trim()
+        .replace(/[¿?¡!.,]/g, '')
+        .replace(/[áéíóú]/g, m => ({ 'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u' }[m]))
+        .replace(/ñ/g, 'n')
+        .replace(/\bestou\b/g, 'estoy')
+        .replace(/\bola\b/g, 'hola')
+        .replace(/\bgrasias\b/g, 'gracias')
+        .replace(/\bpinha\b/g, 'pina')
+        .replace(/\babacate\b/g, 'aguacate')
+        .replace(/\bcafeteria\b/g, 'cafeteria');
+    }
+
+    function handleDeckResult(transcript, sessionId) {
+      if (!activeDeck || !activeDeck.awaitingSpeech || activeDeck.sessionId !== sessionId) return;
+      activeDeck.awaitingSpeech = false;
+
+      const deckRef = activeDeck;
+      const currentItem = deckRef.queue[deckRef.index];
+      const box = document.getElementById(`deck-box-${deckRef.qId}`);
+      const statusEl = document.getElementById(`deck-status-${deckRef.qId}`);
+      const micBtn = document.getElementById(`deck-mic-${deckRef.qId}`);
+      if (micBtn) micBtn.classList.remove('listening');
+
+      const targetNorm = normalizarTextoDeck(currentItem.es);
+      const spokenNorm = normalizarTextoDeck(transcript);
+
+      const acertou = spokenNorm !== '' && (
+        spokenNorm.includes(targetNorm) ||
+        (targetNorm.includes(spokenNorm) && spokenNorm.length >= 4)
+      );
+
+      if (acertou) {
+        if (feedbackDelayTimer) {
+          clearTimeout(feedbackDelayTimer);
+          feedbackDelayTimer = null;
+        }
+        deckRef.hits++;
+        box.classList.remove('miss');
+        box.classList.add('hit');
+        if (statusEl) {
+          statusEl.style.color = '#1b7f75';
+          statusEl.textContent = `✅ ¡Muy bien! ("${transcript}")`;
+        }
+        playCorrectTone();
+        deckTimer = setTimeout(() => advanceDeckCard(), 1600);
+      } else {
+        // Mostra "⏳ Aguarde..." em cinza antes de confirmar erro, evitando flash vermelho prematuro
+        if (statusEl) {
+          statusEl.style.color = '#6c757d';
+          statusEl.textContent = '⏳ Aguarde...';
+        }
+
+        if (feedbackDelayTimer) clearTimeout(feedbackDelayTimer);
+        feedbackDelayTimer = setTimeout(() => {
+          if (!activeDeck || activeDeck.sessionId !== sessionId) return;
+
+          deckRef.attemptsOnCurrent++;
+          box.classList.add('miss');
+
+          if (transcript === '') {
+            // Se o Kodular retornou vazio (silêncio / Error 3806), deixa livre para toque manual sem loop
+            if (statusEl) {
+              statusEl.style.color = '#e63946';
+              statusEl.textContent = 'Não captei áudio. Toque no microfone 🎙️ e fale novamente!';
+            }
+          } else if (deckRef.attemptsOnCurrent < 2 && !currentItem.isRetry) {
+            if (statusEl) {
+              statusEl.style.color = '#e63946';
+              statusEl.textContent = `Ouvi "${transcript}". Preparando microfone...`;
+            }
+            deckTimer = setTimeout(() => {
+              box.classList.remove('miss');
+              triggerDeckListen();
+            }, 2300);
+          } else {
+            deckRef.queue.push({ es: currentItem.es, pt: currentItem.pt, isRetry: true });
+            if (statusEl) {
+              statusEl.style.color = '#e63946';
+              statusEl.textContent = `⏭️ Ouvi "${transcript}". Vamos tentar "${currentItem.es}" no final!`;
+            }
+            deckTimer = setTimeout(() => advanceDeckCard(), 1800);
+          }
+        }, 1100);
+      }
+    }
+
+    function advanceDeckCard() {
+      if (!activeDeck) return;
+      activeDeck.index++;
+      activeDeck.attemptsOnCurrent = 0;
+
+      if (activeDeck.index < activeDeck.queue.length) {
+        renderSpeechCard();
+        // Pausa de 2,3s antes de abrir o microfone no novo card para evitar Error 3806 no Kodular
+        deckTimer = setTimeout(() => triggerDeckListen(), 2300);
+      } else {
+        finishSpeechDeck();
+      }
+    }
+
+    function finishSpeechDeck() {
+      if (!activeDeck) return;
+      const qId = activeDeck.qId;
+      const hits = activeDeck.hits;
+      const box = document.getElementById(`deck-box-${qId}`);
+
+      box.className = 'auto-speech-box hit';
+      box.innerHTML = `
+        <div style="font-size:32px;">🎉</div>
+        <div style="font-size:16px; font-weight:900; color:#1b7f75;">Rodada Concluída!</div>
+        <div style="font-size:13px; font-weight:700; color:#0b2545;">Você acertou todas as ${hits} expressões desta rodada!</div>
+      `;
+
+      completedQuestions.add(qId);
+      updateProgressUI();
+      checkCompletion();
+      activeDeck = null;
+    }
+
+    // CONTROLES DE SAÍDA E PROGRESSO
     function confirmExit() {
       if (completedQuestions.size < totalQuestions) {
         document.getElementById('exit-modal').classList.add('show');
@@ -751,15 +536,37 @@
     }
 
     function exitLesson() {
-      if (deckTimer) clearTimeout(deckTimer);
-      if (completedQuestions.size > 0) saveUserProgress(completedQuestions.size * 10);
+      cleanupSpeechEngines();
+      if (completedQuestions.size > 0) {
+        saveUserProgress(completedQuestions.size * 10);
+      }
       voltarParaAulasBasicas();
+    }
+
+    function checkCompletion() {
+      if (completedQuestions.size >= totalQuestions) {
+        saveUserProgress(50);
+        marcarAulaConcluida();
+        setTimeout(() => {
+          playVictorySound();
+          document.getElementById('victory-modal').classList.add('show');
+        }, 500);
+      }
+    }
+
+    function marcarAulaConcluida() {
+      const concluidas = JSON.parse(localStorage.getItem('faleandgo_completed_lessons') || '[]');
+      if (!concluidas.includes(LESSON_ID)) {
+        concluidas.push(LESSON_ID);
+        localStorage.setItem('faleandgo_completed_lessons', JSON.stringify(concluidas));
+      }
     }
 
     function saveUserProgress(xpEarned) {
       let currentXP = parseInt(localStorage.getItem('faleandgo_xp') || '0');
       let currentStreak = parseInt(localStorage.getItem('faleandgo_streak') || '1');
-      localStorage.setItem('faleandgo_xp', currentXP + xpEarned);
+      currentXP += xpEarned;
+      localStorage.setItem('faleandgo_xp', currentXP);
       localStorage.setItem('faleandgo_streak', currentStreak);
     }
 
@@ -768,13 +575,18 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const ctx = new AudioContext();
         const notes = [261.63, 329.63, 392.00, 523.25];
+        
         notes.forEach((freq, index) => {
-          const osc = ctx.createOscillator(); const gain = ctx.createGain();
-          osc.type = 'triangle'; osc.frequency.value = freq;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = freq;
           gain.gain.setValueAtTime(0.3, ctx.currentTime + index * 0.12);
           gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + index * 0.12 + 0.4);
-          osc.connect(gain); gain.connect(ctx.destination);
-          osc.start(ctx.currentTime + index * 0.12); osc.stop(ctx.currentTime + index * 0.12 + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + index * 0.12);
+          osc.stop(ctx.currentTime + index * 0.12 + 0.4);
         });
       } catch (e) {}
     }
