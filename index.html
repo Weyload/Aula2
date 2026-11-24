@@ -340,99 +340,9 @@
     </div>
 
     <!-- ========================================================= -->
-    <!-- ETAPA 2: COMPREENSÃO AUDITIVA (OUVIR E MARCAR)            -->
+    <!-- ETAPA 2: IMAGENS + MICROFONE (FALA GUIADA)                -->
     <!-- ========================================================= -->
-    <div class="stage-divider">Etapa 2 • Escute e Marque a Tradução</div>
-
-    <!-- EXERCÍCIO 4 (ÁUDIO 1) -->
-    <div class="exercise-card" id="q4">
-      <div class="question-text">4. Toque para ouvir em espanhol e marque o significado correto:</div>
-      <div class="audio-prompt-box">
-        <button class="btn-play-audio" onclick="hablarPronunciacionCorrecta('Cajero automático')">🔊</button>
-        <div>
-          <div class="audio-prompt-label">Ouvir expressão em espanhol</div>
-          <div class="audio-prompt-sub">Toque no botão amarelo para repetir quantas vezes quiser</div>
-        </div>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Carteira de dinheiro</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q4', 'Cajero automático')">Caixa eletrônico</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q4')">Ponto de táxi</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 5 (ÁUDIO 2) -->
-    <div class="exercise-card" id="q5">
-      <div class="question-text">5. Escute a frase da cafeteria e marque o que ela significa:</div>
-      <div class="audio-prompt-box">
-        <button class="btn-play-audio" onclick="hablarPronunciacionCorrecta('Me gusta mucho tu mochila. El diseño es muy chulo.')">🔊</button>
-        <div>
-          <div class="audio-prompt-label">Ouvir frase do diálogo</div>
-          <div class="audio-prompt-sub">Dica: preste atenção nas palavras "mochila" e "chulo"</div>
-        </div>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q5', 'Me gusta mucho tu mochila')">Gosto muito da sua mochila. O design é muito legal.</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">Com licença, você já veio nesta cafeteria antes?</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q5')">O café daqui é muito bom e o bolo está delicioso.</button>
-      </div>
-    </div>
-
-    <!-- EXERCÍCIO 6 (ÁUDIO 3) -->
-    <div class="exercise-card" id="q6">
-      <div class="question-text">6. Escute a frase sobre o clima e marque a tradução certa:</div>
-      <div class="audio-prompt-box">
-        <button class="btn-play-audio" onclick="hablarPronunciacionCorrecta('Es un día soleado')">🔊</button>
-        <div>
-          <div class="audio-prompt-label">Ouvir frase sobre o tempo</div>
-          <div class="audio-prompt-sub">Toque no ícone de som para ouvir</div>
-        </div>
-      </div>
-      <div class="options-grid">
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Está muito frio hoje</button>
-        <button class="opt-btn" onclick="checkAnswer(this, false, 'q6')">Está chovendo muito</button>
-        <button class="opt-btn" onclick="checkAnswer(this, true, 'q6', 'Es un día soleado')">É um dia ensolarado</button>
-      </div>
-    </div>
-
-    <!-- ========================================================= -->
-    <!-- ETAPA 3: DUPLAS DE PALAVRAS (COMBINAR PARES PT <-> ES)    -->
-    <!-- ========================================================= -->
-    <div class="stage-divider">Etapa 3 • Combine os Pares</div>
-
-    <!-- EXERCÍCIO 7 (PARES: CLIMA) -->
-    <div class="exercise-card" id="q7">
-      <div class="question-text">7. Combine os pares (Clima): Toque na expressão em português e na correspondente em espanhol:</div>
-      <div id="pairs-container-q7"></div>
-    </div>
-
-    <!-- EXERCÍCIO 8 (PARES: CAFETERIA E OBJETOS) -->
-    <div class="exercise-card" id="q8">
-      <div class="question-text">8. Combine os pares (Cafeteria e Objetos): Ligue cada palavra à sua tradução:</div>
-      <div id="pairs-container-q8"></div>
-    </div>
-
-    <!-- ========================================================= -->
-    <!-- ETAPA 4: MONTAR DIÁLOGOS INTERATIVOS                      -->
-    <!-- ========================================================= -->
-    <div class="stage-divider">Etapa 4 • Monte os Diálogos</div>
-
-    <!-- EXERCÍCIO 9 (DIÁLOGO 1: SOBRE O CLIMA) -->
-    <div class="exercise-card" id="q9">
-      <div class="question-text">9. Conversa sobre o clima (2 partes): Monte as respostas tocando nas palavras na ordem certa:</div>
-      <div id="dialogue-container-q9"></div>
-    </div>
-
-    <!-- EXERCÍCIO 10 (DIÁLOGO 2: NA FILA DA CAFETERIA) -->
-    <div class="exercise-card" id="q10">
-      <div class="question-text">10. Na fila da cafeteria (3 partes): Complete a conversa entre Carlos e María:</div>
-      <div id="dialogue-container-q10"></div>
-    </div>
-
-    <!-- ========================================================= -->
-    <!-- ETAPA 5: IMAGENS + MICROFONE (FALA GUIADA)                -->
-    <!-- ========================================================= -->
-    <div class="stage-divider">Etapa 5 • Diga o Nome das Imagens</div>
+    <div class="stage-divider">Etapa 2 • Diga o Nome das Imagens</div>
 
     <!-- BALÃO 2 -->
     <div class="mascot-section">
@@ -442,108 +352,198 @@
       </div>
     </div>
 
-    <!-- EXERCÍCIO 11 (SOBREMESA -> POSTRE) -->
-    <div class="exercise-card" id="q11">
-      <div class="question-text">11. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 4 (SOBREMESA -> POSTRE) -->
+    <div class="exercise-card" id="q4">
+      <div class="question-text">4. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('postre', 'mic1-btn', 'status1', 'q11')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('postre', 'mic1-btn', 'status1', 'q4')">
           <img src="Sobremesa.jpg" alt="Sobremesa">
         </div>
         <div class="img-hint-label">Português: <strong>Sobremesa</strong></div>
-        <button class="mic-btn" id="mic1-btn" onclick="startVoiceRecognition('postre', 'mic1-btn', 'status1', 'q11')">🎙️</button>
+        <button class="mic-btn" id="mic1-btn" onclick="startVoiceRecognition('postre', 'mic1-btn', 'status1', 'q4')">🎙️</button>
         <div id="status1" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 12 (ABACATE -> AGUACATE) -->
-    <div class="exercise-card" id="q12">
-      <div class="question-text">12. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 5 (CAIXA ELETRÔNICO -> CAJERO AUTOMÁTICO) -->
+    <div class="exercise-card" id="q5">
+      <div class="question-text">5. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('aguacate', 'mic2-btn', 'status2', 'q12')">
-          <img src="abacate.jpg" alt="Abacate">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('cajero automático', 'mic2-btn', 'status2', 'q5')">
+          <img src="caixa_eletronico.jpg" alt="Caixa Eletrônico">
         </div>
-        <div class="img-hint-label">Português: <strong>Abacate</strong></div>
-        <button class="mic-btn" id="mic2-btn" onclick="startVoiceRecognition('aguacate', 'mic2-btn', 'status2', 'q12')">🎙️</button>
+        <div class="img-hint-label">Português: <strong>Caixa eletrônico</strong></div>
+        <button class="mic-btn" id="mic2-btn" onclick="startVoiceRecognition('cajero automático', 'mic2-btn', 'status2', 'q5')">🎙️</button>
         <div id="status2" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 13 (ABACAXI -> PIÑA) -->
-    <div class="exercise-card" id="q13">
-      <div class="question-text">13. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 6 (ABACAXI -> PIÑA) -->
+    <div class="exercise-card" id="q6">
+      <div class="question-text">6. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('piña', 'mic3-btn', 'status3', 'q13')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('piña', 'mic3-btn', 'status3', 'q6')">
           <img src="abacaxi.jpg" alt="Abacaxi">
         </div>
         <div class="img-hint-label">Português: <strong>Abacaxi</strong></div>
-        <button class="mic-btn" id="mic3-btn" onclick="startVoiceRecognition('piña', 'mic3-btn', 'status3', 'q13')">🎙️</button>
+        <button class="mic-btn" id="mic3-btn" onclick="startVoiceRecognition('piña', 'mic3-btn', 'status3', 'q6')">🎙️</button>
         <div id="status3" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 14 (BOLO -> PASTEL) -->
-    <div class="exercise-card" id="q14">
-      <div class="question-text">14. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 7 (BOLO -> PASTEL) -->
+    <div class="exercise-card" id="q7">
+      <div class="question-text">7. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('pastel', 'mic4-btn', 'status4', 'q14')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('pastel', 'mic4-btn', 'status4', 'q7')">
           <img src="bolo.png" alt="Bolo">
         </div>
         <div class="img-hint-label">Português: <strong>Bolo</strong></div>
-        <button class="mic-btn" id="mic4-btn" onclick="startVoiceRecognition('pastel', 'mic4-btn', 'status4', 'q14')">🎙️</button>
+        <button class="mic-btn" id="mic4-btn" onclick="startVoiceRecognition('pastel', 'mic4-btn', 'status4', 'q7')">🎙️</button>
         <div id="status4" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 15 (CAFETERIA -> CAFETERÍA) -->
-    <div class="exercise-card" id="q15">
-      <div class="question-text">15. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 8 (CAFETERIA -> CAFETERÍA) -->
+    <div class="exercise-card" id="q8">
+      <div class="question-text">8. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('cafetería', 'mic5-btn', 'status5', 'q15')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('cafetería', 'mic5-btn', 'status5', 'q8')">
           <img src="cafeteria.jpg" alt="Cafeteria">
         </div>
         <div class="img-hint-label">Português: <strong>Cafeteria</strong></div>
-        <button class="mic-btn" id="mic5-btn" onclick="startVoiceRecognition('cafetería', 'mic5-btn', 'status5', 'q15')">🎙️</button>
+        <button class="mic-btn" id="mic5-btn" onclick="startVoiceRecognition('cafetería', 'mic5-btn', 'status5', 'q8')">🎙️</button>
         <div id="status5" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 16 (GARRAFA -> BOTELLA) -->
-    <div class="exercise-card" id="q16">
-      <div class="question-text">16. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 9 (GARRAFA -> BOTELLA) -->
+    <div class="exercise-card" id="q9">
+      <div class="question-text">9. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('botella', 'mic6-btn', 'status6', 'q16')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('botella', 'mic6-btn', 'status6', 'q9')">
           <img src="garrafa.jpg" alt="Garrafa">
         </div>
         <div class="img-hint-label">Português: <strong>Garrafa</strong></div>
-        <button class="mic-btn" id="mic6-btn" onclick="startVoiceRecognition('botella', 'mic6-btn', 'status6', 'q16')">🎙️</button>
+        <button class="mic-btn" id="mic6-btn" onclick="startVoiceRecognition('botella', 'mic6-btn', 'status6', 'q9')">🎙️</button>
         <div id="status6" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 17 (CELULAR -> CELULAR) -->
-    <div class="exercise-card" id="q17">
-      <div class="question-text">17. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 10 (CELULAR -> CELULAR) -->
+    <div class="exercise-card" id="q10">
+      <div class="question-text">10. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('celular', 'mic7-btn', 'status7', 'q17')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('celular', 'mic7-btn', 'status7', 'q10')">
           <img src="celular.jpg" alt="Celular">
         </div>
         <div class="img-hint-label">Português: <strong>Celular</strong></div>
-        <button class="mic-btn" id="mic7-btn" onclick="startVoiceRecognition('celular', 'mic7-btn', 'status7', 'q17')">🎙️</button>
+        <button class="mic-btn" id="mic7-btn" onclick="startVoiceRecognition('celular', 'mic7-btn', 'status7', 'q10')">🎙️</button>
         <div id="status7" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
     </div>
 
-    <!-- EXERCÍCIO 18 (TÁXI -> TAXI) -->
-    <div class="exercise-card" id="q18">
-      <div class="question-text">18. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
+    <!-- EXERCÍCIO 11 (TÁXI -> TAXI) -->
+    <div class="exercise-card" id="q11">
+      <div class="question-text">11. Veja a imagem e diga o nome dela em espanhol no microfone:</div>
       <div class="image-speak-box">
-        <div class="clickable-img-wrap" onclick="startVoiceRecognition('taxi', 'mic8-btn', 'status8', 'q18')">
+        <div class="clickable-img-wrap" onclick="startVoiceRecognition('taxi', 'mic8-btn', 'status8', 'q11')">
           <img src="taxi.jpg" alt="Táxi">
         </div>
         <div class="img-hint-label">Português: <strong>Táxi</strong></div>
-        <button class="mic-btn" id="mic8-btn" onclick="startVoiceRecognition('taxi', 'mic8-btn', 'status8', 'q18')">🎙️</button>
+        <button class="mic-btn" id="mic8-btn" onclick="startVoiceRecognition('taxi', 'mic8-btn', 'status8', 'q11')">🎙️</button>
         <div id="status8" style="font-size:13px; font-weight:800; color:#6c757d;">Toque no microfone ou na imagem para falar</div>
       </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- ETAPA 3: COMPREENSÃO AUDITIVA (OUVIR E MARCAR)            -->
+    <!-- ========================================================= -->
+    <div class="stage-divider">Etapa 3 • Escute e Marque a Tradução</div>
+
+    <!-- EXERCÍCIO 12 (ÁUDIO 1) -->
+    <div class="exercise-card" id="q12">
+      <div class="question-text">12. Toque para ouvir em espanhol e marque o significado correto:</div>
+      <div class="audio-prompt-box">
+        <button class="btn-play-audio" onclick="hablarPronunciacionCorrecta('Cajero automático')">🔊</button>
+        <div>
+          <div class="audio-prompt-label">Ouvir expressão em espanhol</div>
+          <div class="audio-prompt-sub">Toque no botão amarelo para repetir quantas vezes quiser</div>
+        </div>
+      </div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q12')">Carteira de dinheiro</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q12', 'Cajero automático')">Caixa eletrônico</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q12')">Ponto de táxi</button>
+      </div>
+    </div>
+
+    <!-- EXERCÍCIO 13 (ÁUDIO 2) -->
+    <div class="exercise-card" id="q13">
+      <div class="question-text">13. Escute a frase da cafeteria e marque o que ela significa:</div>
+      <div class="audio-prompt-box">
+        <button class="btn-play-audio" onclick="hablarPronunciacionCorrecta('Me gusta mucho tu mochila. El diseño es muy chulo.')">🔊</button>
+        <div>
+          <div class="audio-prompt-label">Ouvir frase do diálogo</div>
+          <div class="audio-prompt-sub">Dica: preste atenção nas palavras "mochila" e "chulo"</div>
+        </div>
+      </div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q13', 'Me gusta mucho tu mochila')">Gosto muito da sua mochila. O design é muito legal.</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">Com licença, você já veio nesta cafeteria antes?</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q13')">O café daqui é muito bom e o bolo está delicioso.</button>
+      </div>
+    </div>
+
+    <!-- EXERCÍCIO 14 (ÁUDIO 3) -->
+    <div class="exercise-card" id="q14">
+      <div class="question-text">14. Escute a frase sobre o clima e marque a tradução certa:</div>
+      <div class="audio-prompt-box">
+        <button class="btn-play-audio" onclick="hablarPronunciacionCorrecta('Es un día soleado')">🔊</button>
+        <div>
+          <div class="audio-prompt-label">Ouvir frase sobre o tempo</div>
+          <div class="audio-prompt-sub">Toque no ícone de som para ouvir</div>
+        </div>
+      </div>
+      <div class="options-grid">
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q14')">Está muito frio hoje</button>
+        <button class="opt-btn" onclick="checkAnswer(this, false, 'q14')">Está chovendo muito</button>
+        <button class="opt-btn" onclick="checkAnswer(this, true, 'q14', 'Es un día soleado')">É um dia ensolarado</button>
+      </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- ETAPA 4: DUPLAS DE PALAVRAS (COMBINAR PARES PT <-> ES)    -->
+    <!-- ========================================================= -->
+    <div class="stage-divider">Etapa 4 • Combine os Pares</div>
+
+    <!-- EXERCÍCIO 15 (PARES: CLIMA) -->
+    <div class="exercise-card" id="q15">
+      <div class="question-text">15. Combine os pares (Clima): Toque na expressão em português e na correspondente em espanhol:</div>
+      <div id="pairs-container-q15"></div>
+    </div>
+
+    <!-- EXERCÍCIO 16 (PARES: CAFETERIA E OBJETOS) -->
+    <div class="exercise-card" id="q16">
+      <div class="question-text">16. Combine os pares (Cafeteria e Objetos): Ligue cada palavra à sua tradução:</div>
+      <div id="pairs-container-q16"></div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- ETAPA 5: MONTAR DIÁLOGOS INTERATIVOS                      -->
+    <!-- ========================================================= -->
+    <div class="stage-divider">Etapa 5 • Monte os Diálogos</div>
+
+    <!-- EXERCÍCIO 17 (DIÁLOGO 1: SOBRE O CLIMA) -->
+    <div class="exercise-card" id="q17">
+      <div class="question-text">17. Conversa sobre o clima (2 partes): Monte as respostas tocando nas palavras na ordem certa:</div>
+      <div id="dialogue-container-q17"></div>
+    </div>
+
+    <!-- EXERCÍCIO 18 (DIÁLOGO 2: NA FILA DA CAFETERIA) -->
+    <div class="exercise-card" id="q18">
+      <div class="question-text">18. Na fila da cafeteria (3 partes): Complete a conversa entre Carlos e María:</div>
+      <div id="dialogue-container-q18"></div>
     </div>
 
     <!-- ========================================================= -->
@@ -873,14 +873,14 @@
 
     // 4. EXERCÍCIOS DE DUPLAS DE PALAVRAS (COMBINAR PARES PT <-> ES)
     const configPares = {
-      q7: [
+      q15: [
         { id: 'p1', pt: 'Ensolarado', es: 'Soleado' },
         { id: 'p2', pt: 'Está chovendo', es: 'Está lloviendo' },
         { id: 'p3', pt: 'Guarda-chuva', es: 'Paraguas' },
         { id: 'p4', pt: 'Está calor', es: 'Hace calor' },
         { id: 'p5', pt: 'Está muito frio', es: 'Hace mucho frío' }
       ],
-      q8: [
+      q16: [
         { id: 'p1', pt: 'Com licença', es: 'Disculpa' },
         { id: 'p2', pt: 'Mochila', es: 'Mochila' },
         { id: 'p3', pt: 'Garrafa', es: 'Botella' },
@@ -1023,7 +1023,7 @@
 
     // 5. MONTAR DIÁLOGOS (CLIMA E FILA DA CAFETERIA)
     const configDialogos = {
-      q9: {
+      q17: {
         etapas: [
           {
             badge: 'Parte 1 de 2 — Dia bonito',
@@ -1056,7 +1056,7 @@
           }
         ]
       },
-      q10: {
+      q18: {
         etapas: [
           {
             badge: 'Turno 1 de 3 — Elogio na fila',
@@ -1666,7 +1666,6 @@
       const synth = window.speechSynthesis;
 
       if (dialogoEstado === 'tocando') {
-        // No Android WebView, cancel() + salvar o índice atual garante pausa imediata
         dialogoEstado = 'pausado';
         if (timerProximaFala) {
           clearTimeout(timerProximaFala);
