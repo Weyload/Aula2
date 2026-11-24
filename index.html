@@ -1533,7 +1533,7 @@
       } catch (e) {}
     }
 
-    // 8. LEITOR DO DIÁLOGO COM VOZ MASCULINA (CARLOS) E FEMININA (MARÍA)
+    // 8. LEITOR DO DIÁLOGO COM VOZ MASCULINA (CARLOS) E FEMININA (MARÍA) + PAUSA COMPATÍVEL COM ANDROID
     const falasDialogoCafeteria = [
       {
         genero: 'M',
@@ -1557,8 +1557,10 @@
       }
     ];
 
-    let dialogoEstado = 'parado';
+    let dialogoEstado = 'parado'; // 'parado' | 'tocando' | 'pausado'
     let dialogoIndiceAtual = 0;
+    let dialogoModoSequencial = false;
+    let timerProximaFala = null;
 
     function obterVozEspanholPorGenero(genero) {
       if (!('speechSynthesis' in window)) return null;
@@ -1566,9 +1568,9 @@
       if (vozes.length === 0) return null;
 
       if (genero === 'M') {
-        return vozes.find(v => /male|hombre|jorge|pablo|diego|carlos|enrique|es-es-x-eed|es-us-x-sfb/i.test(v.name)) || vozes[0];
+        return vozes.find(v => /male|hombre|jorge|pablo|diego|carlos|enrique|eed|sfb/i.test(v.name)) || vozes[0];
       } else {
-        return vozes.find(v => /female|mujer|monica|paulina|laura|helena|sabina|es-es-x-eec|es-us-x-sfb/i.test(v.name)) || vozes[vozes.length - 1];
+        return vozes.find(v => /female|mujer|monica|paulina|laura|helena|sabina|eec|sfb/i.test(v.name)) || vozes[vozes.length - 1];
       }
     }
 
@@ -1599,6 +1601,11 @@
     }
 
     function falarFalaDialogo(indice, modoSequencial) {
+      if (timerProximaFala) {
+        clearTimeout(timerProximaFala);
+        timerProximaFala = null;
+      }
+
       if (!('speechSynthesis' in window)) {
         hablarPronunciacionCorrecta(falasDialogoCafeteria[indice].texto);
         return;
@@ -1607,6 +1614,9 @@
       const synth = window.speechSynthesis;
       synth.cancel();
 
+      dialogoIndiceAtual = indice;
+      dialogoModoSequencial = modoSequencial;
+
       const item = falasDialogoCafeteria[indice];
       const utter = new SpeechSynthesisUtterance(item.texto);
       utter.lang = 'es-ES';
@@ -1614,8 +1624,13 @@
       const vozEscolhida = obterVozEspanholPorGenero(item.genero);
       if (vozEscolhida) utter.voice = vozEscolhida;
 
-      utter.pitch = item.genero === 'M' ? 0.82 : 1.24;
-      utter.rate = 0.94;
+      if (item.genero === 'M') {
+        utter.pitch = 0.65;
+        utter.rate = 0.90;
+      } else {
+        utter.pitch = 1.35;
+        utter.rate = 0.98;
+      }
 
       destacarFalaDialogo(indice);
 
@@ -1623,8 +1638,10 @@
         if (dialogoEstado !== 'tocando') return;
         if (modoSequencial && indice + 1 < falasDialogoCafeteria.length) {
           dialogoIndiceAtual = indice + 1;
-          setTimeout(() => {
-            if (dialogoEstado === 'tocando') falarFalaDialogo(dialogoIndiceAtual, true);
+          timerProximaFala = setTimeout(() => {
+            if (dialogoEstado === 'tocando') {
+              falarFalaDialogo(dialogoIndiceAtual, true);
+            }
           }, 350);
         } else {
           pararLeituraDialogo();
@@ -1632,7 +1649,9 @@
       };
 
       utter.onerror = () => {
-        pararLeituraDialogo();
+        if (dialogoEstado === 'tocando') {
+          pararLeituraDialogo();
+        }
       };
 
       synth.speak(utter);
@@ -1647,13 +1666,18 @@
       const synth = window.speechSynthesis;
 
       if (dialogoEstado === 'tocando') {
-        synth.pause();
+        // No Android WebView, cancel() + salvar o índice atual garante pausa imediata
         dialogoEstado = 'pausado';
+        if (timerProximaFala) {
+          clearTimeout(timerProximaFala);
+          timerProximaFala = null;
+        }
+        try { synth.cancel(); } catch (e) {}
         atualizarBotoesDialogo();
       } else if (dialogoEstado === 'pausado') {
-        synth.resume();
         dialogoEstado = 'tocando';
         atualizarBotoesDialogo();
+        falarFalaDialogo(dialogoIndiceAtual, true);
       } else {
         dialogoIndiceAtual = 0;
         dialogoEstado = 'tocando';
@@ -1672,6 +1696,11 @@
     function pararLeituraDialogo() {
       dialogoEstado = 'parado';
       dialogoIndiceAtual = 0;
+      dialogoModoSequencial = false;
+      if (timerProximaFala) {
+        clearTimeout(timerProximaFala);
+        timerProximaFala = null;
+      }
       destacarFalaDialogo(-1);
       atualizarBotoesDialogo();
       if ('speechSynthesis' in window) {
