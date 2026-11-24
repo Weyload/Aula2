@@ -28,7 +28,7 @@
     .vocab-box { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #e1e9f0; line-height: 1.6; margin-bottom: 20px; font-weight: 700; }
     .vocab-tag { display: inline-block; background: #134074; color: #ffb703; padding: 2px 8px; border-radius: 6px; font-weight: 800; margin: 2px; font-size: 12px; }
 
-    /* --- BLOCO DE DIÁLOGO COM ÁUDIO PLAY/PAUSA --- */
+    /* --- BLOCO DE DIÁLOGO COM ÁUDIO MP3 PLAY / PAUSA / STOP --- */
     .dialogo-espanhol-container {
       max-width: 750px;
       margin: 20px auto;
@@ -88,18 +88,23 @@
       color: #ffffff;
     }
     .btn-dialogo-stop {
-      background: #eef4f8;
-      color: #0b2545;
-      border: 1px solid #d0e1f9;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-size: 14px;
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 2px solid #fca5a5;
+      padding: 8px 12px;
+      border-radius: 50px;
+      font-size: 13px;
       font-weight: 900;
       cursor: pointer;
-      display: none;
+      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 4px;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+    .btn-dialogo-stop:active { transform: scale(0.94); }
+    .btn-dialogo-stop:disabled {
+      opacity: 0.4;
+      cursor: default;
     }
     .fala-bloco {
       background-color: #f8fafc;
@@ -229,7 +234,7 @@
 
     <!-- BALÃO 1 -->
     <div class="mascot-section">
-      <img class="capybara-avatar" src="CapiHotel.png" alt="Capivara">
+      <img class="capybara-avatar" src="capiSombrinhaSfundo.png" alt="Capivara">
       <div class="speech-bubble">
         <span class="typed-text" data-texto="Nesta aula vamos conversar sobre o clima, fazer pedidos na cafeteria e aprender novas palavras do dia a dia!"></span><span class="cursor"></span>
       </div>
@@ -261,7 +266,7 @@
       <span class="vocab-tag">Pastel</span>
     </div>
 
-    <!-- DIÁLOGO COM PLAY / PAUSA E VOZ MASCULINA E FEMININA -->
+    <!-- DIÁLOGO COM MP3 (carlos1, maria1, carlos2, maria2, carlos3) -->
     <div class="dialogo-espanhol-container">
       <div class="dialogo-header-bar">
         <div>
@@ -272,8 +277,8 @@
           <button type="button" class="btn-dialogo-play" id="btn-dialogo-play" onclick="alternarLeituraDialogo()">
             ▶️ Ouvir Diálogo
           </button>
-          <button type="button" class="btn-dialogo-stop" id="btn-dialogo-stop" onclick="pararLeituraDialogo()" title="Parar">
-            ⏹️
+          <button type="button" class="btn-dialogo-stop" id="btn-dialogo-stop" onclick="pararLeituraDialogo()" disabled>
+            ⏹️ Parar
           </button>
         </div>
       </div>
@@ -346,7 +351,7 @@
 
     <!-- BALÃO 2 -->
     <div class="mascot-section">
-      <img class="capybara-avatar" src="CapiHotel.png" alt="Capivara">
+      <img class="capybara-avatar" src="capiSombrinhaSfundo.png" alt="Capivara">
       <div class="speech-bubble">
         <span class="typed-text" data-texto="Agora é a sua vez de falar! Veja cada imagem e diga o nome dela em espanhol no microfone."></span><span class="cursor"></span>
       </div>
@@ -1465,6 +1470,7 @@
 
     // 7. CONTROLES DE SAÍDA E SALVAMENTO DE XP
     function confirmExit() {
+      pararLeituraDialogo();
       if (completedQuestions.size < totalQuestions) {
         document.getElementById('exit-modal').classList.add('show');
       } else {
@@ -1533,46 +1539,20 @@
       } catch (e) {}
     }
 
-    // 8. LEITOR DO DIÁLOGO COM VOZ MASCULINA (CARLOS) E FEMININA (MARÍA) + PAUSA COMPATÍVEL COM ANDROID
-    const falasDialogoCafeteria = [
-      {
-        genero: 'M',
-        texto: 'Disculpa, María, ¿esta silla está libre? Qué suerte encontrarte en esta cafetería.'
-      },
-      {
-        genero: 'F',
-        texto: '¡Hola, Carlos! Siéntate. Esta mañana estaba muy soleado y hace calor en el autobús, pero ahora está lloviendo y hace frío.'
-      },
-      {
-        genero: 'M',
-        texto: '¡Sí! Yo no traje mi paraguas, así que pedí un taxi con mi celular. Por cierto, ¡qué teléfono tan moderno, es muy chulo!'
-      },
-      {
-        genero: 'F',
-        texto: '¡Gracias! Oye, ¿ya pediste algo? Yo tengo una ensalada con aguacate y una botella de agua.'
-      },
-      {
-        genero: 'M',
-        texto: 'Voy a pedir un pastel de piña para el postre, pero antes necesito ir al cajero automático a sacar dinero.'
-      }
+    // 8. PLAYER DO DIÁLOGO COM MP3 REAIS + DESTAQUE AMARELADO + STOP IMEDIATO
+    const audiosDialogoCafeteria = [
+      'carlos1.mp3',
+      'maria1.mp3',
+      'carlos2.mp3',
+      'maria2.mp3',
+      'carlos3.mp3'
     ];
 
+    let audioDialogoAtual = null;
     let dialogoEstado = 'parado'; // 'parado' | 'tocando' | 'pausado'
     let dialogoIndiceAtual = 0;
     let dialogoModoSequencial = false;
     let timerProximaFala = null;
-
-    function obterVozEspanholPorGenero(genero) {
-      if (!('speechSynthesis' in window)) return null;
-      const vozes = window.speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().startsWith('es'));
-      if (vozes.length === 0) return null;
-
-      if (genero === 'M') {
-        return vozes.find(v => /male|hombre|jorge|pablo|diego|carlos|enrique|eed|sfb/i.test(v.name)) || vozes[0];
-      } else {
-        return vozes.find(v => /female|mujer|monica|paulina|laura|helena|sabina|eec|sfb/i.test(v.name)) || vozes[vozes.length - 1];
-      }
-    }
 
     function destacarFalaDialogo(indice) {
       document.querySelectorAll('.fala-bloco').forEach((el, i) => {
@@ -1588,108 +1568,109 @@
       if (dialogoEstado === 'tocando') {
         btnPlay.classList.add('playing');
         btnPlay.innerHTML = '⏸️ Pausar';
-        btnStop.style.display = 'flex';
+        btnStop.disabled = false;
       } else if (dialogoEstado === 'pausado') {
         btnPlay.classList.remove('playing');
         btnPlay.innerHTML = '▶️ Continuar';
-        btnStop.style.display = 'flex';
+        btnStop.disabled = false;
       } else {
         btnPlay.classList.remove('playing');
         btnPlay.innerHTML = '▶️ Ouvir Diálogo';
-        btnStop.style.display = 'none';
+        btnStop.disabled = true;
       }
     }
 
-    function falarFalaDialogo(indice, modoSequencial) {
+    function liberarAudioAtual() {
+      if (audioDialogoAtual) {
+        try {
+          audioDialogoAtual.onplay = null;
+          audioDialogoAtual.onended = null;
+          audioDialogoAtual.onerror = null;
+          audioDialogoAtual.pause();
+          audioDialogoAtual.currentTime = 0;
+          audioDialogoAtual.src = '';
+        } catch (e) {}
+        audioDialogoAtual = null;
+      }
+    }
+
+    function tocarFaixaDialogo(indice, modoSequencial) {
       if (timerProximaFala) {
         clearTimeout(timerProximaFala);
         timerProximaFala = null;
       }
 
-      if (!('speechSynthesis' in window)) {
-        hablarPronunciacionCorrecta(falasDialogoCafeteria[indice].texto);
-        return;
-      }
-
-      const synth = window.speechSynthesis;
-      synth.cancel();
+      liberarAudioAtual();
 
       dialogoIndiceAtual = indice;
       dialogoModoSequencial = modoSequencial;
-
-      const item = falasDialogoCafeteria[indice];
-      const utter = new SpeechSynthesisUtterance(item.texto);
-      utter.lang = 'es-ES';
-
-      const vozEscolhida = obterVozEspanholPorGenero(item.genero);
-      if (vozEscolhida) utter.voice = vozEscolhida;
-
-      if (item.genero === 'M') {
-        utter.pitch = 0.65;
-        utter.rate = 0.90;
-      } else {
-        utter.pitch = 1.35;
-        utter.rate = 0.98;
-      }
-
+      dialogoEstado = 'tocando';
+      atualizarBotoesDialogo();
       destacarFalaDialogo(indice);
 
-      utter.onend = () => {
-        if (dialogoEstado !== 'tocando') return;
-        if (modoSequencial && indice + 1 < falasDialogoCafeteria.length) {
+      const audio = new Audio(audiosDialogoCafeteria[indice]);
+      audioDialogoAtual = audio;
+
+      audio.onplay = () => {
+        if (audioDialogoAtual === audio) {
+          destacarFalaDialogo(indice);
+        }
+      };
+
+      audio.onended = () => {
+        if (audioDialogoAtual !== audio || dialogoEstado !== 'tocando') return;
+
+        if (modoSequencial && indice + 1 < audiosDialogoCafeteria.length) {
           dialogoIndiceAtual = indice + 1;
           timerProximaFala = setTimeout(() => {
             if (dialogoEstado === 'tocando') {
-              falarFalaDialogo(dialogoIndiceAtual, true);
+              tocarFaixaDialogo(dialogoIndiceAtual, true);
             }
-          }, 350);
+          }, 300);
         } else {
           pararLeituraDialogo();
         }
       };
 
-      utter.onerror = () => {
-        if (dialogoEstado === 'tocando') {
+      audio.onerror = () => {
+        if (audioDialogoAtual === audio) {
           pararLeituraDialogo();
         }
       };
 
-      synth.speak(utter);
+      audio.play().catch(() => {
+        pararLeituraDialogo();
+      });
     }
 
     function alternarLeituraDialogo() {
-      if (!('speechSynthesis' in window)) {
-        hablarPronunciacionCorrecta(falasDialogoCafeteria.map(f => f.texto).join(' '));
-        return;
-      }
-
-      const synth = window.speechSynthesis;
-
       if (dialogoEstado === 'tocando') {
-        dialogoEstado = 'pausado';
         if (timerProximaFala) {
           clearTimeout(timerProximaFala);
           timerProximaFala = null;
         }
-        try { synth.cancel(); } catch (e) {}
+        if (audioDialogoAtual) {
+          try { audioDialogoAtual.pause(); } catch (e) {}
+        }
+        dialogoEstado = 'pausado';
         atualizarBotoesDialogo();
       } else if (dialogoEstado === 'pausado') {
         dialogoEstado = 'tocando';
         atualizarBotoesDialogo();
-        falarFalaDialogo(dialogoIndiceAtual, true);
+        if (audioDialogoAtual) {
+          audioDialogoAtual.play().catch(() => {
+            tocarFaixaDialogo(dialogoIndiceAtual, dialogoModoSequencial);
+          });
+        } else {
+          tocarFaixaDialogo(dialogoIndiceAtual, true);
+        }
       } else {
-        dialogoIndiceAtual = 0;
-        dialogoEstado = 'tocando';
-        atualizarBotoesDialogo();
-        falarFalaDialogo(0, true);
+        tocarFaixaDialogo(0, true);
       }
     }
 
     function lerFalaUnica(indice) {
-      dialogoIndiceAtual = indice;
-      dialogoEstado = 'tocando';
-      atualizarBotoesDialogo();
-      falarFalaDialogo(indice, false);
+      tocarFaixaDialogo(indice, false);
     }
 
     function pararLeituraDialogo() {
@@ -1700,16 +1681,26 @@
         clearTimeout(timerProximaFala);
         timerProximaFala = null;
       }
+      liberarAudioAtual();
       destacarFalaDialogo(-1);
       atualizarBotoesDialogo();
-      if ('speechSynthesis' in window) {
-        try { window.speechSynthesis.cancel(); } catch (e) {}
-      }
     }
 
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-    }
+    // PARA AUTOMATICAMENTE O ÁUDIO SE O USUÁRIO SAIR DA TELA, MINIMIZAR O APP OU VOLTAR
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        pararLeituraDialogo();
+        cleanupSpeechEngines();
+      }
+    });
+    window.addEventListener('pagehide', () => {
+      pararLeituraDialogo();
+      cleanupSpeechEngines();
+    });
+    window.addEventListener('beforeunload', () => {
+      pararLeituraDialogo();
+      cleanupSpeechEngines();
+    });
   </script>
 </body>
 </html>
