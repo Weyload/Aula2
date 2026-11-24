@@ -268,6 +268,7 @@
 
     <!-- DIÁLOGO COM MP3 (carlos1, maria1, carlos2, maria2, carlos3) -->
     <div class="dialogo-espanhol-container">
+      <audio id="player-dialogo" preload="auto"></audio>
       <div class="dialogo-header-bar">
         <div>
           <h2 class="dialogo-titulo">☕ En la cafetería</h2>
@@ -1539,7 +1540,7 @@
       } catch (e) {}
     }
 
-    // 8. PLAYER DO DIÁLOGO COM MP3 REAIS + DESTAQUE AMARELADO + STOP IMEDIATO
+   // 8. PLAYER DO DIÁLOGO COM MP3 REAIS (ELEMENTO ÚNICO PARA NÃO SER BLOQUEADO NO ANDROID)
     const audiosDialogoCafeteria = [
       'carlos1.mp3',
       'maria1.mp3',
@@ -1548,11 +1549,13 @@
       'carlos3.mp3'
     ];
 
-    let audioDialogoAtual = null;
     let dialogoEstado = 'parado'; // 'parado' | 'tocando' | 'pausado'
     let dialogoIndiceAtual = 0;
     let dialogoModoSequencial = false;
-    let timerProximaFala = null;
+
+    function obterPlayerDialogo() {
+      return document.getElementById('player-dialogo');
+    }
 
     function destacarFalaDialogo(indice) {
       document.querySelectorAll('.fala-bloco').forEach((el, i) => {
@@ -1580,27 +1583,9 @@
       }
     }
 
-    function liberarAudioAtual() {
-      if (audioDialogoAtual) {
-        try {
-          audioDialogoAtual.onplay = null;
-          audioDialogoAtual.onended = null;
-          audioDialogoAtual.onerror = null;
-          audioDialogoAtual.pause();
-          audioDialogoAtual.currentTime = 0;
-          audioDialogoAtual.src = '';
-        } catch (e) {}
-        audioDialogoAtual = null;
-      }
-    }
-
     function tocarFaixaDialogo(indice, modoSequencial) {
-      if (timerProximaFala) {
-        clearTimeout(timerProximaFala);
-        timerProximaFala = null;
-      }
-
-      liberarAudioAtual();
+      const player = obterPlayerDialogo();
+      if (!player) return;
 
       dialogoIndiceAtual = indice;
       dialogoModoSequencial = modoSequencial;
@@ -1608,62 +1593,52 @@
       atualizarBotoesDialogo();
       destacarFalaDialogo(indice);
 
-      const audio = new Audio(audiosDialogoCafeteria[indice]);
-      audioDialogoAtual = audio;
+      player.pause();
+      player.src = audiosDialogoCafeteria[indice];
+      player.load();
 
-      audio.onplay = () => {
-        if (audioDialogoAtual === audio) {
-          destacarFalaDialogo(indice);
+      player.onplay = () => {
+        if (dialogoEstado === 'tocando') {
+          destacarFalaDialogo(dialogoIndiceAtual);
         }
       };
 
-      audio.onended = () => {
-        if (audioDialogoAtual !== audio || dialogoEstado !== 'tocando') return;
+      player.onended = () => {
+        if (dialogoEstado !== 'tocando') return;
 
-        if (modoSequencial && indice + 1 < audiosDialogoCafeteria.length) {
-          dialogoIndiceAtual = indice + 1;
-          timerProximaFala = setTimeout(() => {
-            if (dialogoEstado === 'tocando') {
-              tocarFaixaDialogo(dialogoIndiceAtual, true);
-            }
-          }, 300);
+        if (dialogoModoSequencial && dialogoIndiceAtual + 1 < audiosDialogoCafeteria.length) {
+          dialogoIndiceAtual++;
+          destacarFalaDialogo(dialogoIndiceAtual);
+          player.src = audiosDialogoCafeteria[dialogoIndiceAtual];
+          player.play().catch(() => pararLeituraDialogo());
         } else {
           pararLeituraDialogo();
         }
       };
 
-      audio.onerror = () => {
-        if (audioDialogoAtual === audio) {
-          pararLeituraDialogo();
-        }
+      player.onerror = () => {
+        pararLeituraDialogo();
       };
 
-      audio.play().catch(() => {
+      player.play().catch(() => {
         pararLeituraDialogo();
       });
     }
 
     function alternarLeituraDialogo() {
+      const player = obterPlayerDialogo();
+      if (!player) return;
+
       if (dialogoEstado === 'tocando') {
-        if (timerProximaFala) {
-          clearTimeout(timerProximaFala);
-          timerProximaFala = null;
-        }
-        if (audioDialogoAtual) {
-          try { audioDialogoAtual.pause(); } catch (e) {}
-        }
+        player.pause();
         dialogoEstado = 'pausado';
         atualizarBotoesDialogo();
       } else if (dialogoEstado === 'pausado') {
         dialogoEstado = 'tocando';
         atualizarBotoesDialogo();
-        if (audioDialogoAtual) {
-          audioDialogoAtual.play().catch(() => {
-            tocarFaixaDialogo(dialogoIndiceAtual, dialogoModoSequencial);
-          });
-        } else {
-          tocarFaixaDialogo(dialogoIndiceAtual, true);
-        }
+        player.play().catch(() => {
+          tocarFaixaDialogo(dialogoIndiceAtual, dialogoModoSequencial);
+        });
       } else {
         tocarFaixaDialogo(0, true);
       }
@@ -1677,11 +1652,19 @@
       dialogoEstado = 'parado';
       dialogoIndiceAtual = 0;
       dialogoModoSequencial = false;
-      if (timerProximaFala) {
-        clearTimeout(timerProximaFala);
-        timerProximaFala = null;
+
+      const player = obterPlayerDialogo();
+      if (player) {
+        try {
+          player.onplay = null;
+          player.onended = null;
+          player.onerror = null;
+          player.pause();
+          player.currentTime = 0;
+          player.removeAttribute('src');
+        } catch (e) {}
       }
-      liberarAudioAtual();
+
       destacarFalaDialogo(-1);
       atualizarBotoesDialogo();
     }
