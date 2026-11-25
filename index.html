@@ -626,8 +626,8 @@
   </div>
 
   <script>
-    const URL_AULAS_BASICAS = 'https://weyload.github.io/Aulas-basicas/';
-    const LESSON_ID = 'clima_cafeteria';
+    const URL_AULAS_BASICAS = 'https://weyload.github.io/Fale-Tela-inicial/aulas_basicas.html';
+    const LESSON_ID = 'aula3_clima';
     const totalQuestions = 20;
     const completedQuestions = new Set();
 
@@ -1684,6 +1684,18 @@
       pararLeituraDialogo();
       cleanupSpeechEngines();
     });
+    window.addEventListener('load', () => {
+  const visitadas = JSON.parse(localStorage.getItem('faleandgo_visited_lessons') || '[]');
+  if (!visitadas.includes(LESSON_ID)) {
+    visitadas.push(LESSON_ID);
+    localStorage.setItem('faleandgo_visited_lessons', JSON.stringify(visitadas));
+  }
+  history.pushState({ aulaAtiva: true }, '', window.location.href);
+  window.addEventListener('popstate', () => {
+    confirmExit();
+    history.pushState({ aulaAtiva: true }, '', window.location.href);
+  });
+});
   </script>
 </body>
 </html>
